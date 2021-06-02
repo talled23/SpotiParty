@@ -29,6 +29,8 @@
         <div id="oauth">
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+        <button class="btn btn-default" id="play-song">Play a secret song</button>
+        <button class="btn btn-default" id="pause-song">Pause</button>
       </div>
     </div>
 
@@ -61,42 +63,64 @@
       </dl>
     </script>
 
-    <div class="container">
-      <button id="play-random">Play</button>
-    </div>
-
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="scripts/player.js"></script>
     <script>
       (function() {
+        function setCookie(cname, cvalue) {
+          const d = new Date();
+          document.cookie = cname + "=" + cvalue + ";";
+        }
+
+        /**
+         * Traverses through cookies and finds cookie name.
+         * @return {string} Cookie name
+         */
+        function getCookie(cname) {
+          const name = cname + "=";
+          const decodedCookie = decodeURIComponent(document.cookie);
+          const ca = decodedCookie.split(";");
+          for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
 
         /**
          * Obtains parameters from the hash of the URL
          * @return Object
          */
         function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
+          const hashParams = {};
+          let e, r = /([^&;=]+)=?([^&;]*)/g,
+                  q = window.location.hash.substring(1);
           while ( e = r.exec(q)) {
              hashParams[e[1]] = decodeURIComponent(e[2]);
           }
           return hashParams;
         }
 
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
+        const userProfileSource = document.getElementById("user-profile-template").innerHTML,
+                userProfileTemplate = Handlebars.compile(userProfileSource),
+                userProfilePlaceholder = document.getElementById("user-profile");
 
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
+        const oauthSource = document.getElementById("oauth-template").innerHTML,
+                oauthTemplate = Handlebars.compile(oauthSource),
+                oauthPlaceholder = document.getElementById("oauth");
 
-        var params = getHashParams();
+        const params = getHashParams;
 
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
+        let access_token = getCookie("spotify_access"),
+                refresh_token = getCookie("spotify_refresh"),
+                error = params.error;
 
         if (error) {
           alert('There was an error during the authentication');
@@ -118,6 +142,11 @@
 
                   $('#login').hide();
                   $('#loggedin').show();
+                  const socket_payload = {
+                    access_token,
+                    display_name: response.display_name,
+                  }
+                  socket.emit('logged_in', socket_payload);
                 }
             });
           } else {
@@ -134,6 +163,7 @@
               }
             }).done(function(data) {
               access_token = data.access_token;
+              setCookie("spotify_access", access_token);
               oauthPlaceholder.innerHTML = oauthTemplate({
                 access_token: access_token,
                 refresh_token: refresh_token
