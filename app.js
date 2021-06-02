@@ -165,13 +165,23 @@ io.on('connection', (socket) => {
     };
   })
 
-  socket.on('play', async ({ songId }) => {
-    console.log(`User with id ${socket.id} has played song ${songId}`);
-    await users[socket.id].spotify_api.play({
-      "uris": [`spotify:track:${songId}`],
-      "position_ms": 0
-    });
+  socket.on('play', async ({ resume, songId }) => {
+    if (!resume) {
+      console.log(`User with id ${socket.id} has played song ${songId}`);
+      await users[socket.id].spotify_api.play({
+        "uris": [`spotify:track:${songId}`],
+        "position_ms": 0
+      });
+    } else {
+      console.log(`User with id ${socket.id} has resumed playback.`);
+      await users[socket.id].spotify_api.play();
+    }
   })
+
+  socket.on('pause', async () => {
+    console.log(`User with id ${socket.id} has paused playback.`);
+    await users[socket.id].spotify_api.pause();
+  });
 })
 
 server.listen(8888, () => {
