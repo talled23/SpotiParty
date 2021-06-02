@@ -17,7 +17,6 @@
   </head>
 
   <body>
-
     <div class="container">
       <div id="login">
         <h1>This is an example of the Authorization Code flow</h1>
@@ -30,7 +29,6 @@
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
         <button class="btn btn-default" id="play-song">Play a secret song</button>
-        <button class="btn btn-default" id="pause-song">Pause</button>
       </div>
     </div>
 
@@ -49,7 +47,6 @@
             <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
             <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
             <dt>Country</dt><dd>{{country}}</dd>
-<!--            <dt>Play a funny song</dt><button id="play-random">Play</button>-->
           </dl>
         </div>
       </div>
@@ -172,12 +169,6 @@
           }, false);
         }
       })();
-
-      document.getElementById("play-random").addEventListener('click', () => {
-        $.ajax({
-          url: '/play'
-        })
-      });
     </script>
   </body>
 </html>
