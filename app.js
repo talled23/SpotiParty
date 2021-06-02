@@ -101,7 +101,7 @@ app.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log(body);
+          // console.log(body);
         });
 
         res.cookie("spotify_access", access_token);
@@ -145,10 +145,10 @@ app.get('/refresh_token', function(req, res) {
 const users = {};
 
 io.on('connection', (socket) => {
-  console.log("User with id " + socket.id + " has connected.")
-
   socket.on('logged_in', ({ access_token, display_name }) => {
+    console.log("=============================================")
     console.log(`Socket ${socket.id} (${display_name}) has logged in with token ${access_token}`)
+    console.log("=============================================")
 
     const spotifyApi = new SpotifyWebApi({
       clientId: client_id,
@@ -167,19 +167,20 @@ io.on('connection', (socket) => {
 
   socket.on('play', async ({ resume, songId }) => {
     if (!resume) {
-      console.log(`User with id ${socket.id} has played song ${songId}`);
+      console.log(`User ${users[socket.id].display_name} has played song ${songId}`);
+
       await users[socket.id].spotify_api.play({
         "uris": [`spotify:track:${songId}`],
         "position_ms": 0
       });
     } else {
-      console.log(`User with id ${socket.id} has resumed playback.`);
+      console.log(`User ${users[socket.id].display_name} has resumed playback.`);
       await users[socket.id].spotify_api.play();
     }
   })
 
   socket.on('pause', async () => {
-    console.log(`User with id ${socket.id} has paused playback.`);
+    console.log(`User ${users[socket.id].display_name} has paused playback.`);
     await users[socket.id].spotify_api.pause();
   });
 });
