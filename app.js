@@ -182,8 +182,8 @@ io.on('connection', (socket) => {
     console.log(`User with id ${socket.id} has paused playback.`);
     await users[socket.id].spotify_api.pause();
   });
-})
+});
 
 server.listen(8888, () => {
   console.log('Imagine not pu to http://localhost:8888')
-})
+});
