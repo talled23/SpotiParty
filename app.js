@@ -167,6 +167,15 @@ io.on('connection', (socket) => {
 
   socket.on('play', async ({ resume, songId }) => {
     if (!resume) {
+
+      let url;
+
+      await users[socket.id].spotify_api.getTrack(songId).then((data)=> {
+        url = data.body.album.images[0].url
+      });
+
+      io.emit('image_url', url);
+
       console.log(`User ${users[socket.id].display_name} has played song ${songId}`);
 
       await users[socket.id].spotify_api.play({

@@ -21,6 +21,18 @@
         width: 400px;
         height: 400px;
         border-radius:50%;
+        position: center;
+        z-index: 1;
+      }
+      .dot {
+        height: 100px;
+        width: 100px;
+        background-color: #fff;
+        border-radius: 50%;
+        z-index: 2;
+        position: relative;
+        top:0;
+        left: 252px;
       }
 
       @-webkit-keyframes spinning-circle {
@@ -64,7 +76,9 @@
         <div class="pull-left">
           <img class="media-object" width="150" src="{{images.0.url}}" />
           <!-- I do not really get how to use spotify api to get the track image but in the meanwhile here is a spinning disk of astronaut in the ocean -->
-          <img class="track-pic" src="https://i.scdn.co/image/ab67616d00001e0267f78019693691a200452eaa" />
+          <img class="dot" src="https://image.winudf.com/v2/image1/aHUuYmthbG1hbi5hbmRyb2lkLmFwcC53aGl0ZXNjcmVlbl9zY3JlZW5fMV8xNTY3MDI0NzUwXzAwMw/screen-1.jpg?fakeurl=1&type=.jpg">
+          <img class="track-pic" id="track-pic" src="https://i.scdn.co/image/ab67616d00001e0267f78019693691a200452eaa" />
+
         </div>
         <div class="media-body">
           <dl class="dl-horizontal">
