@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
+    <title>SpotiParty</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/237b5ec3bb.js" crossorigin="anonymous"></script>
     <style type="text/css">
@@ -24,15 +24,35 @@
         position: center;
         z-index: 1;
       }
-      .dot {
-        height: 100px;
-        width: 100px;
-        background-color: #fff;
+      .border {
+        height: 125px;
+        width: 125px;
+        background-color: yellow;
         border-radius: 50%;
         z-index: 2;
         position: relative;
         top:0;
-        left: 252px;
+        left: 265px;
+      }
+      .ring {
+        height: 100px;
+        width: 100px;
+        background-color: yellow;
+        border-radius: 50%;
+        z-index: 3;
+        position: relative;
+        top:0;
+        left: 381px;
+      }
+      .dot {
+        height: 15px;
+        width: 15px;
+        background-color: #fff;
+        border-radius: 50%;
+        z-index: 4;
+        position: relative;
+        top:0;
+        left: 443px;
       }
 
       @-webkit-keyframes spinning-circle {
@@ -44,6 +64,17 @@
           -webkit-transform: rotate(360deg);
           transform: rotate(360deg);
         }
+      }
+
+      #search-results a {
+        text-decoration: none !important;
+        color: inherit;
+      }
+
+      #search-results:hover {
+        color:#000;
+        text-decoration:none;
+        cursor:pointer;
       }
     </style>
   </head>
@@ -66,6 +97,7 @@
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
+          <ul style="margin-bottom: 75px; list-style:none" id="search-results"></ul>
         </form>
       </div>
     </div>
@@ -76,7 +108,9 @@
         <div class="pull-left">
           <img class="media-object" width="150" src="{{images.0.url}}" />
           <!-- I do not really get how to use spotify api to get the track image but in the meanwhile here is a spinning disk of astronaut in the ocean -->
-          <img class="dot" src="https://image.winudf.com/v2/image1/aHUuYmthbG1hbi5hbmRyb2lkLmFwcC53aGl0ZXNjcmVlbl9zY3JlZW5fMV8xNTY3MDI0NzUwXzAwMw/screen-1.jpg?fakeurl=1&type=.jpg">
+          <img class="dot" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAA1BMVEX///+nxBvIAAAASElEQVR4nO3BgQAAAADDoPlTX+AIVQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwDcaiAAFXD1ujAAAAAElFTkSuQmCC">
+          <img class="ring" src="https://pbs.twimg.com/profile_images/1105434753644224512/Sey0zX22_400x400.jpg"/>
+          <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
           <img class="track-pic" id="track-pic" src="https://i.scdn.co/image/ab67616d00001e0267f78019693691a200452eaa" />
 
         </div>

@@ -3,8 +3,10 @@ const socket = io();
 let isPlaying = false;
 
 document.getElementById('play-song').addEventListener("click", () => {
+  const pause = document.getElementById('pause-song');
   const songId = document.getElementById('search-bar').value;
   socket.emit('play', { resume: false, songId })
+  pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
   isPlaying = true;
 });
 
@@ -34,7 +36,8 @@ function getCookie(name) {
 
 document.getElementById('search-button').addEventListener("click", (e) => {
   e.preventDefault();
-  console.clear();
+  const d = document.getElementById("search-results")
+  d.innerHTML = "";
   fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(document.getElementById('search-bar').value)}&type=track&market=US&limit=5`, {
     headers: {
       'Accept': 'application/json',
@@ -45,7 +48,8 @@ document.getElementById('search-button').addEventListener("click", (e) => {
       .then((data) => {
         data.tracks.items.forEach((track) => {
           const explicit = track.explicit ? "[Explicit] " : "";
-          console.log(`${track.name} ${explicit}by ${track.artists[0].name} | ${track.id}`)
+          // console.log(`${track.name} ${explicit}by ${track.artists[0].name} | ${track.id}`)
+          d.innerHTML += `<li><a>${track.name} ${explicit} by ${track.artists[0].name} | ${track.id}</a></li>`
         });
       });
 })
