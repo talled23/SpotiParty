@@ -27,9 +27,7 @@
         width: 500px;
       }
       .track-pic {
-        animation-name: spinning-circle;
-        animation-duration: 20s;
-        animation-iteration-count: infinite;
+        animation: spinning-disk 10s infinite linear;
         width: 400px;
         height: 400px;
         border-radius:50%;
@@ -77,15 +75,13 @@
         left: 703px;
       }
 
-      @-webkit-keyframes spinning-circle {
-        0% {
-          -webkit-transform: rotate(0deg);
+      @keyframes spinning-disk {
+        from {
           transform: rotate(0deg);
         }
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
+        to {
+          transform: rotate(359deg);
+  }
       }
 
       #search-results a {
