@@ -165,22 +165,24 @@ io.on('connection', (socket) => {
     };
   })
 
-  socket.on('play', async ({ resume, songId }) => {
+  socket.on('play', async ({ resume, songId, offset }) => {
     if (!resume) {
 
       let url;
+      let duration;
 
       await users[socket.id].spotify_api.getTrack(songId).then((data)=> {
         url = data.body.album.images[0].url
+        duration = data.body.duration_ms;
       });
 
       io.emit('image_url', url);
-
+      io.emit('song_duration_ms', duration)
       console.log(`User ${users[socket.id].display_name} has played song ${songId}`);
 
       await users[socket.id].spotify_api.play({
         "uris": [`spotify:track:${songId}`],
-        "position_ms": 0
+        "position_ms": offset
       });
     } else {
       console.log(`User ${users[socket.id].display_name} has resumed playback.`);
@@ -192,6 +194,21 @@ io.on('connection', (socket) => {
     console.log(`User ${users[socket.id].display_name} has paused playback.`);
     await users[socket.id].spotify_api.pause();
   });
+
+  socket.on('seek', async(time) => {
+    console.log(`User ${users[socket.id].display_name} moved the song to time: ${time}.`);
+    let song_id;
+    await users[socket.id].spotify_api.getMyCurrentPlayingTrack().then((data) => {
+      song_id = data.body.item.id;
+    })
+
+    console.log(time)
+
+    await users[socket.id].spotify_api.play({
+      "uris": [`spotify:track:${song_id}`],
+      "position_ms": time*1000
+    })
+  })
 });
 
 server.listen(8888, () => {

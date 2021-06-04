@@ -3,8 +3,20 @@
   <head>
     <title>SpotiParty</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
     <script src="https://kit.fontawesome.com/237b5ec3bb.js" crossorigin="anonymous"></script>
     <style type="text/css">
+
+      li {
+        width: 50%;
+      }
+
+      .form-slider {
+        display: block;
+        text-align: center;
+        line-height: 150%;
+      }
+
       #login, #loggedin {
         display: none;
       }
@@ -101,13 +113,18 @@
         <div id="oauth">
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-        <button class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i>
-        </button>
-        <form class="form-inline my-2 my-lg-0">
+        <div>
+          <label for="customRange1" class="form-label form-slider">Position</label>
+        <input value=0 max=100 type="range" class="form-range" id="customRange1">
+      </div>
+        <form style="display:inline" class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
-          <ul style="margin-bottom: 75px; list-style:none" id="search-results"></ul>
         </form>
+
+        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i>
+        </button>
+        <ul style="margin-bottom: 75px; list-style:none" id="search-results"></ul>
       </div>
     </div>
 

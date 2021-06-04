@@ -50,7 +50,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
           ids.push(track.id)
           const explicit = track.explicit ? "[Explicit] " : "";
           // console.log(`${track.name} ${explicit} by ${track.artists[0].name} | ${track.id}`)
-          d.innerHTML += `<li><a>${track.name} ${explicit} by ${track.artists[0].name} | ${track.id}</a></li>`
+          d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" frameborder="0" allowtransparency="false" allow="encrypted-media"></iframe></a></li>`
         });
         const items = d.getElementsByTagName("li");
         for (let i = 0; i < ids.length; i++) {
@@ -58,14 +58,23 @@ document.getElementById('search-button').addEventListener("click", (e) => {
             document.getElementById("search-bar").value = ids[i];
             const pause = document.getElementById('pause-song');
             const songId = document.getElementById('search-bar').value;
-            socket.emit('play', { resume: false, songId })
+            // playing the song
+            socket.emit('play', { resume: false, songId, offset:0 })
             pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
             isPlaying = true;
-          })
+          });
         }
       });
-})
+});
+
+document.getElementById("customRange1").addEventListener("click", () => {
+  socket.emit('seek', document.getElementById("customRange1").value)
+});
 
 socket.on('image_url', (url) => {
   document.getElementById('track-pic').src = url;
-})
+});
+
+socket.on('song_duration_ms', (duration) => {
+  document.getElementById("customRange1").max = duration/1000;
+});
