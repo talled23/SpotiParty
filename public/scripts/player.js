@@ -21,6 +21,12 @@ document.getElementById('pause-song').addEventListener("click", () => {
     socket.emit('play', { resume: true, songId: null })
     pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
     isPlaying = true;
+
+    // setInterval(() => {
+    //   if (isPlaying) {
+    //     document.getElementById("customRange1").value += 1;
+    //   }
+    // }, 1000);
   }
 });
 
@@ -32,7 +38,6 @@ function getCookie(name) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
-
 
 document.getElementById('search-button').addEventListener("click", (e) => {
   e.preventDefault();
@@ -62,6 +67,15 @@ document.getElementById('search-button').addEventListener("click", (e) => {
             socket.emit('play', { resume: false, songId, offset:0 })
             pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
             isPlaying = true;
+
+            document.getElementById("customRange1").value = 0;
+
+            setInterval(() => {
+              const slider = document.getElementById("customRange1");
+              if (isPlaying) {
+                slider.value = parseInt(slider.value) + 1;
+              }
+            }, 1000);
           });
         }
       });
