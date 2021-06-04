@@ -10,6 +10,14 @@ let isPlaying = false;
 //   isPlaying = true;
 // });
 
+setInterval(() => {
+  const slider = document.getElementById("customRange1");
+  if (isPlaying) {
+    console.log(slider.value)
+    slider.value = parseInt(slider.value) + 1;
+  }
+}, 1000);
+
 document.getElementById('pause-song').addEventListener("click", () => {
   const pause = document.getElementById('pause-song');
 
@@ -21,18 +29,13 @@ document.getElementById('pause-song').addEventListener("click", () => {
     socket.emit('play', { resume: true, songId: null })
     pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
     isPlaying = true;
-
-    // setInterval(() => {
-    //   if (isPlaying) {
-    //     document.getElementById("customRange1").value += 1;
-    //   }
-    // }, 1000);
   }
 });
 
 // document.getElementById('resume-song').addEventListener("click", () => {
 //   socket.emit('play', { resume: true, songId: null })
 // });
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -69,13 +72,6 @@ document.getElementById('search-button').addEventListener("click", (e) => {
             isPlaying = true;
 
             document.getElementById("customRange1").value = 0;
-
-            setInterval(() => {
-              const slider = document.getElementById("customRange1");
-              if (isPlaying) {
-                slider.value = parseInt(slider.value) + 1;
-              }
-            }, 1000);
           });
         }
       });
