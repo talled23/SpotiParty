@@ -84,12 +84,12 @@
   }
       }
 
-      #search-results a {
+      .search-results a {
         text-decoration: none !important;
         color: inherit;
       }
 
-      #search-results:hover {
+      .search-results:hover {
         color:#000;
         text-decoration:none;
         cursor:pointer;
@@ -118,9 +118,12 @@
           <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
         </form>
 
-        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i>
-        </button>
-        <ul style="margin-bottom: 75px; list-style:none" id="search-results"></ul>
+        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i></button>
+        <button style="display:inline" class="btn btn-default" id="rewind"><i class="fas fa-backward"></i></button>
+        <button style="display:inline" class="btn btn-default" id="skip"><i class="fas fa-forward"></i></button>
+
+        <ul style="margin-bottom: 75px; list-style:none" class="search-results" id="search-results-tracks"></ul>
+        <ul style="margin-bottom: 75px; list-style:none" class="search-results" id="search-results-albums"></ul>
       </div>
     </div>
 

@@ -143,6 +143,8 @@ app.get('/refresh_token', function(req, res) {
 });
 
 const users = {};
+const queue = []; // queue of songIds
+let queue_pos = 0; // position in queue
 
 io.on('connection', (socket) => {
   socket.on('logged_in', ({ access_token, display_name }) => {
@@ -165,23 +167,36 @@ io.on('connection', (socket) => {
     };
   })
 
-  socket.on('play', async ({ resume, songId, offset }) => {
+  socket.on('add_queue', async ({ isCollection, id }) => {
+    if (isCollection) {
+      await users[socket.id].spotify_api.getAlbum(id).then((data) => {
+        data.body.tracks.items.forEach((track) => {
+          queue.push(track.id)
+        })
+      })
+    }
+    else {
+      queue.push(id);
+    }
+  })
+
+  socket.on('play', async ({ resume, offset }) => {
     if (!resume) {
 
       let url;
       let duration;
 
-      await users[socket.id].spotify_api.getTrack(songId).then((data)=> {
+      await users[socket.id].spotify_api.getTrack(queue[queue_pos]).then((data)=> {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
       });
 
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration)
-      console.log(`User ${users[socket.id].display_name} has played song ${songId}`);
+      console.log(`User ${users[socket.id].display_name} has played song ${queue[queue_pos]}`);
 
       await users[socket.id].spotify_api.play({
-        "uris": [`spotify:track:${songId}`],
+        "uris": [`spotify:track:${queue[queue_pos]}`],
         "position_ms": offset
       });
     } else {
@@ -207,6 +222,22 @@ io.on('connection', (socket) => {
     await users[socket.id].spotify_api.play({
       "uris": [`spotify:track:${song_id}`],
       "position_ms": time*1000
+    })
+  })
+
+  socket.on('rewind', async() => {
+    console.log(`User ${users[socket.id].display_name} hit rewind.`);
+    await users[socket.id].spotify_api.play({
+      "uris": [`spotify:track:${queue[--queue_pos]}`],
+      "position_ms": 0
+    })
+  })
+
+  socket.on('skip', async() => {
+    console.log(`User ${users[socket.id].display_name} skipped the current song.`);
+    await users[socket.id].spotify_api.play({
+      "uris": [`spotify:track:${queue[++queue_pos]}`],
+      "position_ms": 0
     })
   })
 });
