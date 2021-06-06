@@ -26,24 +26,28 @@
         white-space: nowrap;
         width: 500px;
       }
+      .disk{
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px;
+      }
       .track-pic {
         animation: spinning-disk 10s infinite linear;
         width: 400px;
         height: 400px;
         border-radius:50%;
-        position: center;
+        position: relative;
         z-index: 1;
-        /*border: 2px solid #000;*/
       }
       .border {
         height: 125px;
         width: 125px;
-        background-color: yellow;
+        background-color: black;
         border-radius: 50%;
         z-index: 2;
-        position: relative;
-        top:0;
-        left: 265px;
+        position: absolute;
       }
       .ring {
         height: 100px;
@@ -51,28 +55,22 @@
         background-color: yellow;
         border-radius: 50%;
         z-index: 3;
-        position: relative;
-        top:0;
-        left: 381px;
+        position: absolute;
       }
       .dot {
         height: 15px;
         width: 15px;
-        background-color: #fff;
+        background-color: white;
         border-radius: 50%;
         z-index: 4;
-        position: relative;
-        top:0;
-        left: 443px;
+        position: absolute;
       }
       .arm {
-        height: 300px;
-        width: 300px;
+        height: 400px;
+        width: 400px;
         border-radius: 50%;
         z-index: 5;
         position: absolute;
-        top: 200px;;
-        left: 703px;
       }
 
       @keyframes spinning-disk {
@@ -81,15 +79,15 @@
         }
         to {
           transform: rotate(359deg);
-  }
+        }
       }
 
-      .search-results a {
+      #search-results a {
         text-decoration: none !important;
         color: inherit;
       }
 
-      .search-results:hover {
+      #search-results:hover {
         color:#000;
         text-decoration:none;
         cursor:pointer;
@@ -118,12 +116,9 @@
           <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
         </form>
 
-        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i></button>
-        <button style="display:inline" class="btn btn-default" id="rewind"><i class="fas fa-backward"></i></button>
-        <button style="display:inline" class="btn btn-default" id="skip"><i class="fas fa-forward"></i></button>
-
-        <ul style="margin-bottom: 75px; list-style:none" class="search-results" id="search-results-tracks"></ul>
-        <ul style="margin-bottom: 75px; list-style:none" class="search-results" id="search-results-albums"></ul>
+        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i>
+        </button>
+        <ul style="margin-bottom: 75px; list-style:none" id="search-results"></ul>
       </div>
     </div>
 
@@ -132,12 +127,13 @@
       <div class="media">
         <div class="pull-left">
           <img class="media-object" width="150" src="{{images.0.url}}" />
-          <!-- I do not really get how to use spotify api to get the track image but in the meanwhile here is a spinning disk of astronaut in the ocean -->
-          <img class="dot" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAA1BMVEX///+nxBvIAAAASElEQVR4nO3BgQAAAADDoPlTX+AIVQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwDcaiAAFXD1ujAAAAAElFTkSuQmCC">
-          <img class="ring" src="https://pbs.twimg.com/profile_images/1105434753644224512/Sey0zX22_400x400.jpg"/>
-          <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
-          <img class="track-pic" id="track-pic" src=https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"" />
-          <img class="arm" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/390561/needle-2.png"/>
+          <div class="disk">
+            <span class="dot"></span>
+            <span class="ring"></span>
+            <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
+            <img class="track-pic" id="track-pic" src=https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"" />
+            <img class="arm" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/390561/needle-2.png"/>
+          </div>
         </div>
         <div class="media-body">
           <dl class="dl-horizontal">
