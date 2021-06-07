@@ -13,8 +13,10 @@ let isPlaying = false;
 setInterval(() => {
   const slider = document.getElementById("customRange1");
   if (isPlaying) {
-    // console.log(slider.value)
     slider.value = parseInt(slider.value) + 1;
+  }
+  if (parseInt(slider.value) === Math.floor(parseInt(slider.max))) {
+    socket.emit('skip')
   }
 }, 1000);
 
@@ -31,7 +33,6 @@ document.getElementById('pause-song').addEventListener("click", () => {
     isPlaying = true;
   }
 });
-
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -73,7 +74,6 @@ document.getElementById('search-button').addEventListener("click", (e) => {
 
 
             // playing the song
-            console.log(albumId)
             socket.emit('add_queue', { isCollection: true, id:albumId })
             if (!isPlaying) {
               socket.emit('play', {resume: false, offset: 0})
@@ -94,7 +94,6 @@ document.getElementById('search-button').addEventListener("click", (e) => {
         data.tracks.items.forEach((track) => {
           ids.push(track.id)
           const explicit = track.explicit ? "[Explicit] " : "";
-          // console.log(`${track.name} ${explicit} by ${track.artists[0].name} | ${track.id}`)
           d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" frameborder="0" allowtransparency="false" allow="encrypted-media"></iframe></a></li>`
         });
         const items = d.getElementsByTagName("li");
@@ -104,17 +103,13 @@ document.getElementById('search-button').addEventListener("click", (e) => {
             const pause = document.getElementById('pause-song');
             const songId = document.getElementById('search-bar').value;
             // playing the song
-            console.log(songId)
             socket.emit('add_queue', {isCollection: false, id: songId})
             if (!isPlaying) {
               socket.emit('play', {resume: false, offset: 0})
 
               pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
               isPlaying = true;
-            }
-
-            document.getElementById("customRange1").value = 0;
-          });
+            }});
         }
       });
 });
@@ -124,17 +119,17 @@ document.getElementById("customRange1").addEventListener("click", () => {
 });
 
 document.getElementById("rewind").addEventListener("click", () => {
-  socket.emit('rewind')
-})
+  socket.emit('rewind')})
 
 document.getElementById("skip").addEventListener("click", () => {
-  socket.emit('skip')
-})
+  socket.emit('skip')})
 
 socket.on('image_url', (url) => {
   document.getElementById('track-pic').src = url;
 });
 
 socket.on('song_duration_ms', (duration) => {
-  document.getElementById("customRange1").max = duration/1000;
+  const slider = document.getElementById("customRange1")
+  slider.max = duration/1000;
+  slider.value=0
 });
