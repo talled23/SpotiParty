@@ -269,6 +269,8 @@ io.on('connection', (socket) => {
   })
 });
 
-server.listen(8888, () => {
-  console.log('Imagine not pu to http://localhost:8888')
+const PORT = process.env.PORT || 8888;
+
+server.listen(PORT, () => {
+  console.log(`Server is now connected and listening on ${PORT}`);
 });
