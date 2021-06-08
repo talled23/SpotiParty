@@ -174,6 +174,7 @@ io.on('connection', (socket) => {
           queue.push(track.id)
         })
       })
+      console.log(queue)
     }
     else {
       queue.push(id);

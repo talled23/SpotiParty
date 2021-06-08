@@ -72,14 +72,13 @@ document.getElementById('search-button').addEventListener("click", (e) => {
             const pause = document.getElementById('pause-song');
             const albumId = document.getElementById('search-bar').value;
 
-
             // playing the song
             socket.emit('add_queue', { isCollection: true, id:albumId })
-            if (!isPlaying) {
+            setTimeout( () => {
               socket.emit('play', {resume: false, offset: 0})
               pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
               isPlaying = true;
-            }
+            }, 250)
           })
         }
   });
