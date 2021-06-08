@@ -82,6 +82,11 @@
         }
       }
 
+      .search-results {
+        margin-bottom: 75px;
+        list-style:none;
+      }
+
       .search-results a {
         text-decoration: none !important;
         color: inherit;
@@ -111,17 +116,22 @@
           <label for="customRange1" class="form-label form-slider">Position</label>
         <input value=0 max=100 type="range" class="form-range" id="customRange1">
       </div>
+
+      <div style="margin-bottom:25px">
         <form style="display:inline" class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
         </form>
 
-        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i></button>
         <button style="display:inline" class="btn btn-default" id="rewind"><i class="fas fa-backward"></i></button>
+        <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i></button>
         <button style="display:inline" class="btn btn-default" id="skip"><i class="fas fa-forward"></i></button>
+      </div>
 
-        <ul style="margin-bottom: 75px; list-style:none" class="search-results" id="search-results-tracks"></ul>
-        <ul style="margin-bottom: 75px; list-style:none" class="search-results" id="search-results-albums"></ul>
+        <div>
+          <ul style="float:left" class="search-results" id="search-results-tracks"></ul>
+          <ul style="display:inline-block; width:50%" class="search-results" id="search-results-albums"></ul>
+        </div>
       </div>
     </div>
 

@@ -63,7 +63,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
   }).then(response => response.json()).then((data) => {
         data.albums.items.forEach((album) => {
           albums.push(album.id)
-          de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
+          de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
         });
         const items = de.getElementsByTagName("li");
         for (let i = 0; i < albums.length; i++) {
@@ -75,9 +75,11 @@ document.getElementById('search-button').addEventListener("click", (e) => {
             // playing the song
             socket.emit('add_queue', { isCollection: true, id:albumId })
             setTimeout( () => {
-              socket.emit('play', {resume: false, offset: 0})
-              pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
-              isPlaying = true;
+              if (!isPlaying) {
+                socket.emit('play', {resume: false, offset: 0})
+                pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+                isPlaying = true;
+              }
             }, 250)
           })
         }
@@ -93,7 +95,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
         data.tracks.items.forEach((track) => {
           ids.push(track.id)
           const explicit = track.explicit ? "[Explicit] " : "";
-          d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" frameborder="0" allowtransparency="false" allow="encrypted-media"></iframe></a></li>`
+          d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" frameborder="0" allowtransparency="false" allow="encrypted-media"></iframe><button>play</button></a></li>`
         });
         const items = d.getElementsByTagName("li");
         for (let i = 0; i < ids.length; i++) {
@@ -124,6 +126,7 @@ document.getElementById("skip").addEventListener("click", () => {
   socket.emit('skip')})
 
 socket.on('image_url', (url) => {
+  console.log(url)
   document.getElementById('track-pic').src = url;
 });
 
