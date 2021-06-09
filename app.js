@@ -82,7 +82,7 @@ app.get('/callback', function(req, res) {
         grant_type: "authorization_code"
       },
       headers: {
-        "Authorization": "Basic " + (new Buffer(client_id + ":" + client_secret).toString("base64"))
+        "Authorization": "Basic " + (Buffer.from((client_id + ":" + client_secret), "base64"))
       },
       json: true
     };
@@ -186,18 +186,16 @@ io.on('connection', (connection) => {
   })
 
   connection.on('sync', async() => {
-    for (const socket in users) {
-      await users[socket].spotify_api.play({
-        "uris": [`spotify:track:${queue[queue_pos]}`],
-        "position_ms": song_time_ms * 1000
-      });
-      if (isPlaying)
-        users[socket].emit('resume')
-      else {
-        users[socket].emit('pause')
-      }
-      users[socket].emit("song_duration_ms", duration, song_time_ms)
+    await users[connection.id].spotify_api.play({
+      "uris": [`spotify:track:${queue[queue_pos]}`],
+      "position_ms": song_time_ms * 1000
+    });
+    if (isPlaying)
+      connection.emit('resume')
+    else {
+      connection.emit('pause')
     }
+    connection.emit("song_duration_ms", duration, song_time_ms)
   })
 
   connection.on('add_queue', async ({ isCollection, id }) => {
