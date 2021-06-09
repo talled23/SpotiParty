@@ -178,11 +178,11 @@ io.on('connection', (connection) => {
     };
 
     if (isPlaying)
-      connection.emit('resume')
+      io.emit('resume')
     else
-      connection.emit('pause')
-    connection.emit("image_url", url)
-    connection.emit("song_duration_ms", duration, song_time_ms)
+      io.emit('pause')
+    io.emit("image_url", url)
+    io.emit("song_duration_ms", duration, song_time_ms)
   })
 
   connection.on('sync', async() => {
@@ -249,8 +249,8 @@ io.on('connection', (connection) => {
 
     for (const socket in users) {
       await users[socket].spotify_api.pause();
-      socket.emit('pause')
     }
+    io.emit('pause')
     isPlaying = false;
   });
 
