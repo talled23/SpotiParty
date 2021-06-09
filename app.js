@@ -157,11 +157,10 @@ setInterval(() => {
   }
 }, 1000)
 
-io.on('connection', (socket) => {
-  socket.on('logged_in', ({ access_token, display_name }) => {
+io.on('connection', (connection) => {
+  connection.on('logged_in', ({ access_token, display_name }) => {
     console.log("=============================================")
-    console.log(`Socket ${socket.id} (${display_name}) has logged in with token ${access_token}`)
-    console.log(`${song_time_ms} ${duration} ${isPlaying}`)
+    console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
     console.log("=============================================")
 
     const spotifyApi = new SpotifyWebApi({
@@ -172,37 +171,39 @@ io.on('connection', (socket) => {
 
     spotifyApi.setAccessToken(access_token);
 
-    users[socket.id] = {
+    users[connection.id] = {
       spotify_api: spotifyApi,
       access_token,
       display_name
     };
 
     if (isPlaying)
-      socket.emit('resume')
+      connection.emit('resume')
     else
-      socket.emit('pause')
-    socket.emit("image_url", url)
-    socket.emit("song_duration_ms", duration, song_time_ms)
-
+      connection.emit('pause')
+    connection.emit("image_url", url)
+    connection.emit("song_duration_ms", duration, song_time_ms)
   })
 
-  socket.on('sync', async() => {
-    await users[socket.id].spotify_api.play({
-      "uris": [`spotify:track:${queue[queue_pos]}`],
-      "position_ms": song_time_ms*1000
-    });
-    if (isPlaying)
-      socket.emit('resume')
-    else {
-      socket.emit('pause')
+  connection.on('sync', async() => {
+    for (const socket in users) {
+      await users[socket].spotify_api.play({
+        "uris": [`spotify:track:${queue[queue_pos]}`],
+        "position_ms": song_time_ms * 1000
+      });
     }
-    socket.emit("song_duration_ms", duration, song_time_ms)
+
+    if (isPlaying)
+      connection.emit('resume')
+    else {
+      connection.emit('pause')
+    }
+    connection.emit("song_duration_ms", duration, song_time_ms)
   })
 
-  socket.on('add_queue', async ({ isCollection, id }) => {
+  connection.on('add_queue', async ({ isCollection, id }) => {
     if (isCollection) {
-      await users[socket.id].spotify_api.getAlbum(id).then((data) => {
+      await users[connection.id].spotify_api.getAlbum(id).then((data) => {
         data.body.tracks.items.forEach((track) => {
           queue.push(track.id)
         })
@@ -213,63 +214,72 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('play', async ({ resume, offset }) => {
+  connection.on('play', async ({ resume, offset }) => {
 
     if (!resume) {
-      await users[socket.id].spotify_api.getTrack(queue[queue_pos]).then((data)=> {
+      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data)=> {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
       });
 
       await io.emit('image_url', url);
       await io.emit('song_duration_ms', duration, 0)
-      console.log(`User ${users[socket.id].display_name} has played song ${queue[queue_pos]}`);
+      console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
 
-      await users[socket.id].spotify_api.play({
-        "uris": [`spotify:track:${queue[queue_pos]}`],
-        "position_ms": offset
-      });
+      for (const socket in users) {
+        await users[socket].spotify_api.play({
+          "uris": [`spotify:track:${queue[queue_pos]}`],
+          "position_ms": offset
+        });
+      }
 
       song_time_ms = 0;
 
     } else {
-      console.log(`User ${users[socket.id].display_name} has resumed playback.`);
-      await users[socket.id].spotify_api.play();
+      console.log(`User ${users[connection.id].display_name} has resumed playback.`);
+      await users[connection.id].spotify_api.play();
     }
     isPlaying = true;
-    socket.emit('resume')
+    connection.emit('resume')
   })
 
-  socket.on('pause', async () => {
-    console.log(`User ${users[socket.id].display_name} has paused playback.`);
-    await users[socket.id].spotify_api.pause();
-    socket.emit('pause')
+  connection.on('pause', async () => {
+    console.log(`User ${users[connection.id].display_name} has paused playback.`);
+
+    for (const socket in users) {
+      await users[socket].spotify_api.pause();
+      connection.emit('pause')
+    }
     isPlaying = false;
   });
 
-  socket.on('seek', async(time) => {
-    console.log(`User ${users[socket.id].display_name} moved the song to time: ${time}.`);
+  connection.on('seek', async(time) => {
+    console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
     let song_id;
-    await users[socket.id].spotify_api.getMyCurrentPlayingTrack().then((data) => {
+    await users[connection.id].spotify_api.getMyCurrentPlayingTrack().then((data) => {
       song_id = data.body.item.id;
     })
 
-    await users[socket.id].spotify_api.play({
-      "uris": [`spotify:track:${song_id}`],
-      "position_ms": time*1000
-    })
+    for (const socket in users) {
+      await users[socket].spotify_api.play({
+        "uris": [`spotify:track:${song_id}`],
+        "position_ms": time * 1000
+      })
+    }
   })
 
-  socket.on('rewind', async() => {
+  connection.on('rewind', async() => {
     if (queue_pos > 0) {
-      console.log(`User ${users[socket.id].display_name} hit rewind.`);
+      console.log(`User ${users[connection.id].display_name} hit rewind.`);
 
-      await users[socket.id].spotify_api.play({
-        "uris": [`spotify:track:${queue[--queue_pos]}`],
-        "position_ms": 0
-      })
+      for (const socket in users) {
+        await users[socket].spotify_api.play({
+          "uris": [`spotify:track:${queue[--queue_pos]}`],
+          "position_ms": 0
+        })
+      }
 
-      await users[socket.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
+      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
       });
@@ -280,16 +290,18 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('skip', async() => {
+  connection.on('skip', async() => {
     if (queue_pos + 1 < queue.length) {
-      console.log(`User ${users[socket.id].display_name} skipped the current song.`);
+      console.log(`User ${users[connection.id].display_name} skipped the current song.`);
 
-      await users[socket.id].spotify_api.play({
-        "uris": [`spotify:track:${queue[++queue_pos]}`],
-        "position_ms": 0
-      })
+      for (const socket in users) {
+        await users[socket].spotify_api.play({
+          "uris": [`spotify:track:${queue[++queue_pos]}`],
+          "position_ms": 0
+        })
+      }
 
-      await users[socket.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
+      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
       });
