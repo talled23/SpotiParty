@@ -76,12 +76,49 @@
 
   <body>
     <div class="disk">
-        <span class="dot"></span>
-        <span class="ring"></span>
-        <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
-        <img class="track-pic" id="track-pic" src=https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"" />
-        <img class="arm" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/390561/needle-2.png"/>
+        <img class="track-pic" id="track-pic" src="https://upload.wikimedia.org/wikipedia/en/7/70/Graduation_%28album%29.jpg"/>
     </div>
+    <script>
+
+      function getAverageColor(img) {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var width = canvas.width = img.naturalWidth;
+        var height = canvas.height = img.naturalHeight;
+
+        ctx.drawImage(img, 0, 0);
+
+        var imageData = ctx.getImageData(0, 0, width, height);
+        var data = imageData.data;
+        var r = 0;
+        var g = 0;
+        var b = 0;
+
+        for (var i = 0, l = data.length; i < l; i += 4) {
+          r += data[i];
+          g += data[i+1];
+          b += data[i+2];
+        }
+
+        r = Math.floor(r / (data.length / 4));
+        g = Math.floor(g / (data.length / 4));
+        b = Math.floor(b / (data.length / 4));
+
+        return { r: r, g: g, b: b };
+      }
+
+      const img = new Image();
+
+      img.addEventListener('load', function()  {
+        var rgb = getAverageColor(img);
+        var rgbStr = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+        document.getElementsByTagName("BODY")[0].style.backgroundColor = rgbStr;
+      });
+
+      img.crossOrigin = 'Anonymous';
+      img.src = document.getElementById("track-pic").getAttribute("src");
+
+    </script>
   </body>
 </html>
 
