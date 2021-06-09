@@ -191,14 +191,13 @@ io.on('connection', (connection) => {
         "uris": [`spotify:track:${queue[queue_pos]}`],
         "position_ms": song_time_ms * 1000
       });
+      if (isPlaying)
+        users[socket].emit('resume')
+      else {
+        users[socket].emit('pause')
+      }
+      users[socket].emit("song_duration_ms", duration, song_time_ms)
     }
-
-    if (isPlaying)
-      connection.emit('resume')
-    else {
-      connection.emit('pause')
-    }
-    connection.emit("song_duration_ms", duration, song_time_ms)
   })
 
   connection.on('add_queue', async ({ isCollection, id }) => {
@@ -237,10 +236,14 @@ io.on('connection', (connection) => {
 
     } else {
       console.log(`User ${users[connection.id].display_name} has resumed playback.`);
-      await users[connection.id].spotify_api.play();
+      for (const socket in users) {
+        await users[socket].spotify_api.play();
+      }
     }
     isPlaying = true;
-    connection.emit('resume')
+    for (const socket in users) {
+      socket.emit('resume')
+    }
   })
 
   connection.on('pause', async () => {
@@ -248,7 +251,7 @@ io.on('connection', (connection) => {
 
     for (const socket in users) {
       await users[socket].spotify_api.pause();
-      connection.emit('pause')
+      socket.emit('pause')
     }
     isPlaying = false;
   });
@@ -265,6 +268,7 @@ io.on('connection', (connection) => {
         "uris": [`spotify:track:${song_id}`],
         "position_ms": time * 1000
       })
+      song_time_ms = time*1000;
     }
   })
 
