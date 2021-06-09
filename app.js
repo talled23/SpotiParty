@@ -241,9 +241,7 @@ io.on('connection', (connection) => {
       }
     }
     isPlaying = true;
-    for (const socket in users) {
-      socket.emit('resume')
-    }
+    io.emit('resume')
   })
 
   connection.on('pause', async () => {
