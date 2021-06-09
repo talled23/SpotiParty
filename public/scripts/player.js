@@ -123,15 +123,32 @@ document.getElementById("rewind").addEventListener("click", () => {
   socket.emit('rewind')})
 
 document.getElementById("skip").addEventListener("click", () => {
-  socket.emit('skip')})
+  socket.emit('skip')
+})
+
+document.getElementById("sync").addEventListener("click", () => {
+  socket.emit('sync')
+})
 
 socket.on('image_url', (url) => {
   console.log(url)
   document.getElementById('track-pic').src = url;
 });
 
-socket.on('song_duration_ms', (duration) => {
+socket.on('song_duration_ms', (duration, val) => {
   const slider = document.getElementById("customRange1")
   slider.max = duration/1000;
-  slider.value=0
+  slider.value=val
 });
+
+socket.on('pause', () => {
+  document.getElementById("track-pic").style.animation = "spinning-disk 10s paused linear"
+  document.getElementById('pause-song').innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
+  isPlaying = false;
+})
+
+socket.on('resume', () => {
+  document.getElementById("track-pic").style.animation = "spinning-disk 10s infinite linear"
+  document.getElementById('pause-song').innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+  isPlaying = true;
+})
