@@ -178,11 +178,15 @@ io.on('connection', (connection) => {
     };
 
     if (isPlaying)
-      io.emit('resume')
+      connection.emit('resume')
     else
-      io.emit('pause')
-    io.emit("image_url", url)
-    io.emit("song_duration_ms", duration, song_time_ms)
+      connection.emit('pause')
+    connection.emit("image_url", url)
+    connection.emit("song_duration_ms", duration, song_time_ms)
+
+    for (let i = 0; i < queue.length; i++) {
+      connection.emit("added_queue", queue[i])
+    }
   })
 
   connection.on('sync', async() => {
@@ -203,11 +207,13 @@ io.on('connection', (connection) => {
       await users[connection.id].spotify_api.getAlbum(id).then((data) => {
         data.body.tracks.items.forEach((track) => {
           queue.push(track.id)
+          io.emit('added_queue', track.id)
         })
       })
     }
     else {
       queue.push(id);
+      io.emit('added_queue', id)
     }
   })
 

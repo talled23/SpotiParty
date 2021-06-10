@@ -97,6 +97,24 @@
         text-decoration:none;
         cursor:pointer;
       }
+
+      #queue {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      ul#queue {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+      }
+
+      ul#queue li {
+        display: inline;
+      }
+
     </style>
   </head>
 
@@ -121,6 +139,7 @@
         <form style="display:inline" class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
+
         </form>
 
         <button style="display:inline" class="btn btn-default" id="rewind"><i class="fas fa-backward"></i></button>
@@ -170,6 +189,12 @@
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
       </dl>
     </script>
+
+    <div>
+      <ul id="queue">
+
+      </ul>
+    </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>

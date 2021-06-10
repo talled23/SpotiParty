@@ -152,3 +152,7 @@ socket.on('resume', () => {
   document.getElementById('pause-song').innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
   isPlaying = true;
 })
+
+socket.on('added_queue', ( songId ) => {
+  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="300" height="80" frameBorder="0" allowTransparency="false" allow="encrypted-media"></iframe></li>`
+})
