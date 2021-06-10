@@ -129,7 +129,8 @@
         </div>
         <div id="oauth">
         </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+        <button style="margin-bottom:25px" class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+        <ul id="queue"></ul>
         <div>
           <label for="customRange1" class="form-label form-slider">Position</label>
         <input value=0 max=100 type="range" class="form-range" id="customRange1">
@@ -189,12 +190,6 @@
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
       </dl>
     </script>
-
-    <div>
-      <ul id="queue">
-
-      </ul>
-    </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>

@@ -190,12 +190,13 @@ io.on('connection', (connection) => {
   })
 
   connection.on('sync', async() => {
-    await users[connection.id].spotify_api.play({
-      "uris": [`spotify:track:${queue[queue_pos]}`],
-      "position_ms": song_time_ms * 1000
-    });
-    if (isPlaying)
+    if (isPlaying) {
       connection.emit('resume')
+      await users[connection.id].spotify_api.play({
+        "uris": [`spotify:track:${queue[queue_pos]}`],
+        "position_ms": song_time_ms * 1000
+      });
+    }
     else {
       connection.emit('pause')
     }
