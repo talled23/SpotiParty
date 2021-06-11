@@ -53,7 +53,9 @@ document.getElementById('search-button').addEventListener("click", (e) => {
 
   //differentiate between buttons
   let cur = 0
-  if (document.getElementById('search-button').value !== document.getElementById('search-bar').defaultValue) {
+
+  if(document.getElementById("search-bar").value !== document.getElementById('search-bar').defaultValue) {
+
     fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(document.getElementById('search-bar').value)}&type=album&market=US&limit=3`, {
       headers: {
         'Accept': 'application/json',
