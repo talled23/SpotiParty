@@ -161,7 +161,6 @@ io.on('connection', (connection) => {
   connection.on('logged_in', ({ access_token, display_name }) => {
     console.log("=============================================")
     console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
-    console.log(access_token + " " + display_name)
     console.log("=============================================")
 
     const spotifyApi = new SpotifyWebApi({
@@ -189,7 +188,6 @@ io.on('connection', (connection) => {
     for (let i = 0; i < queue.length; i++) {
       connection.emit("added_queue", queue[i])
     }
-    console.log(users)
   })
 
   connection.on('sync', async() => {
@@ -240,6 +238,8 @@ io.on('connection', (connection) => {
             "uris": [`spotify:track:${queue[queue_pos]}`],
             "position_ms": offset
           });
+        } else {
+          delete users[socket];
         }
       }
 
@@ -250,6 +250,8 @@ io.on('connection', (connection) => {
       for (const socket in users) {
         if (users[socket].connection.connected) {
           await users[socket].spotify_api.play();
+        } else {
+          delete users[socket];
         }
       }
     }
@@ -263,6 +265,8 @@ io.on('connection', (connection) => {
     for (const socket in users) {
       if (users[socket].connection.connected) {
         await users[socket].spotify_api.pause();
+      } else {
+        delete users[socket];
       }
     }
     io.emit('pause')
@@ -271,12 +275,13 @@ io.on('connection', (connection) => {
 
   connection.on('seek', async(time) => {
     console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
-    let song_id;
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
         await users[socket].spotify_api.seek(time * 1000, {}, () => {
         })
+      } else {
+        delete users[socket];
       }
     }
     song_time_ms = time;
@@ -292,6 +297,8 @@ io.on('connection', (connection) => {
             "uris": [`spotify:track:${queue[--queue_pos]}`],
             "position_ms": 0
           })
+        } else {
+          delete users[socket];
         }
       }
 
@@ -318,6 +325,8 @@ io.on('connection', (connection) => {
             "uris": [`spotify:track:${queue[++queue_pos]}`],
             "position_ms": 0
           })
+        } else {
+          delete users[socket];
         }
       }
 
