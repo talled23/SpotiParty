@@ -161,6 +161,7 @@ io.on('connection', (connection) => {
   connection.on('logged_in', ({ access_token, display_name }) => {
     console.log("=============================================")
     console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
+    console.log(access_token + " " + display_name)
     console.log("=============================================")
 
     const spotifyApi = new SpotifyWebApi({
@@ -190,14 +191,15 @@ io.on('connection', (connection) => {
   })
 
   connection.on('sync', async() => {
+    await users[connection.id].spotify_api.play({
+      "uris": [`spotify:track:${queue[queue_pos]}`],
+      "position_ms": song_time_ms*1000
+    });
     if (isPlaying) {
       connection.emit('resume')
-      await users[connection.id].spotify_api.play({
-        "uris": [`spotify:track:${queue[queue_pos]}`],
-        "position_ms": song_time_ms * 1000
-      });
     }
     else {
+      await users[connection.id].spotify_api.pause();
       connection.emit('pause')
     }
     connection.emit("song_duration_ms", duration, song_time_ms)
@@ -226,8 +228,8 @@ io.on('connection', (connection) => {
         duration = data.body.duration_ms;
       });
 
-      await io.emit('image_url', url);
-      await io.emit('song_duration_ms', duration, 0)
+      io.emit('image_url', url);
+      io.emit('song_duration_ms', duration, 0)
       console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
 
       for (const socket in users) {
@@ -262,17 +264,12 @@ io.on('connection', (connection) => {
   connection.on('seek', async(time) => {
     console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
     let song_id;
-    await users[connection.id].spotify_api.getMyCurrentPlayingTrack().then((data) => {
-      song_id = data.body.item.id;
-    })
 
     for (const socket in users) {
-      await users[socket].spotify_api.play({
-        "uris": [`spotify:track:${song_id}`],
-        "position_ms": time * 1000
+      await users[socket].spotify_api.seek(time*1000, {}, () => {
       })
-      song_time_ms = time*1000;
     }
+    song_time_ms = time;
   })
 
   connection.on('rewind', async() => {
@@ -293,6 +290,8 @@ io.on('connection', (connection) => {
 
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration, 0)
+      io.emit('resume')
+      isPlaying = true;
       song_time_ms = 0;
     }
   })
@@ -315,6 +314,7 @@ io.on('connection', (connection) => {
 
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration, 0)
+      io.emit('resume')
       isPlaying = true;
       song_time_ms = 0;
     }
