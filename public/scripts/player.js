@@ -10,6 +10,33 @@ let isPlaying = false;
 //   isPlaying = true;
 // });
 
+function getAverageColor(img) {
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+  var width = canvas.width = img.naturalWidth;
+  var height = canvas.height = img.naturalHeight;
+
+  ctx.drawImage(img, 0, 0);
+
+  var imageData = ctx.getImageData(0, 0, width, height);
+  var data = imageData.data;
+  var r = 0;
+  var g = 0;
+  var b = 0;
+
+  for (var i = 0, l = data.length; i < l; i += 4) {
+    r += data[i];
+    g += data[i+1];
+    b += data[i+2];
+  }
+
+  r = Math.floor(r / (data.length / 4));
+  g = Math.floor(g / (data.length / 4));
+  b = Math.floor(b / (data.length / 4));
+
+  return { r: r, g: g, b: b };
+}
+
 setInterval(() => {
   const slider = document.getElementById("customRange1");
   if (isPlaying) {
@@ -138,6 +165,18 @@ document.getElementById("sync").addEventListener("click", () => {
 socket.on('image_url', (url) => {
   console.log(url)
   document.getElementById('track-pic').src = url;
+  if(url != "https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"){
+    const img = new Image();
+
+    img.addEventListener('load', function()  {
+      var rgb = getAverageColor(img);
+      var rgbStr = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+      document.getElementsByTagName("SPAN")[1].style.backgroundColor = rgbStr;
+    });
+
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+  }
 });
 
 socket.on('song_duration_ms', (duration, val) => {
@@ -147,13 +186,13 @@ socket.on('song_duration_ms', (duration, val) => {
 });
 
 socket.on('pause', () => {
-  document.getElementById("track-pic").style.animation = "spinning-disk 10s paused linear"
+  document.getElementById("track-pic").setAttribute('class', 'track-pic paused')
   document.getElementById('pause-song').innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
   isPlaying = false;
 })
 
 socket.on('resume', () => {
-  document.getElementById("track-pic").style.animation = "spinning-disk 10s infinite linear"
+  document.getElementById("track-pic").setAttribute('class', 'track-pic')
   document.getElementById('pause-song').innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
   isPlaying = true;
 })
