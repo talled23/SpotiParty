@@ -92,7 +92,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
     }).then(response => response.json()).then((data) => {
       data.albums.items.forEach((album) => {
         albums.push(album.id)
-        de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
+        de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="100%" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
       });
       const items = de.getElementsByTagName("li");
       for (let i = 0; i < albums.length; i++) {
@@ -123,8 +123,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
     }).then(response => response.json()).then((data) => {
       data.tracks.items.forEach((track) => {
         ids.push(track.id)
-        const explicit = track.explicit ? "[Explicit] " : "";
-        d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" frameborder="0" allowtransparency="false" allow="encrypted-media"></iframe><button>play</button></a></li>`
+        d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" style="border:0;" allowtransparency="false" allow="encrypted-media"></iframe><button>play</button></a></li>`
       });
       const items = d.getElementsByTagName("li");
       for (let i = 0; i < ids.length; i++) {
@@ -154,7 +153,6 @@ document.getElementById("rewind").addEventListener("click", () => {
   socket.emit('rewind')})
 
 document.getElementById("skip").addEventListener("click", () => {
-  console.log("skipped")
   socket.emit('skip')
 })
 
@@ -163,7 +161,6 @@ document.getElementById("sync").addEventListener("click", () => {
 })
 
 socket.on('image_url', (url) => {
-  console.log(url)
   document.getElementById('track-pic').src = url;
   if(url != "https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"){
     const img = new Image();
@@ -198,5 +195,5 @@ socket.on('resume', () => {
 })
 
 socket.on('added_queue', ( songId ) => {
-  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="300" height="80" frameBorder="0" allowTransparency="false" allow="encrypted-media"></iframe></li>`
+  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="300" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe></li>`
 })

@@ -161,7 +161,6 @@ io.on('connection', (connection) => {
   connection.on('logged_in', ({ access_token, display_name }) => {
     console.log("=============================================")
     console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
-    console.log(access_token + " " + display_name)
     console.log("=============================================")
 
     const spotifyApi = new SpotifyWebApi({
@@ -175,7 +174,8 @@ io.on('connection', (connection) => {
     users[connection.id] = {
       spotify_api: spotifyApi,
       access_token,
-      display_name
+      display_name,
+      connection
     };
 
     if (isPlaying)
@@ -233,10 +233,14 @@ io.on('connection', (connection) => {
       console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
 
       for (const socket in users) {
-        await users[socket].spotify_api.play({
-          "uris": [`spotify:track:${queue[queue_pos]}`],
-          "position_ms": offset
-        });
+        if (users[socket].connection.connected) {
+          await users[socket].spotify_api.play({
+            "uris": [`spotify:track:${queue[queue_pos]}`],
+            "position_ms": offset
+          });
+        } else {
+          delete users[socket];
+        }
       }
 
       song_time_ms = 0;
@@ -244,7 +248,11 @@ io.on('connection', (connection) => {
     } else {
       console.log(`User ${users[connection.id].display_name} has resumed playback.`);
       for (const socket in users) {
-        await users[socket].spotify_api.play();
+        if (users[socket].connection.connected) {
+          await users[socket].spotify_api.play();
+        } else {
+          delete users[socket];
+        }
       }
     }
     isPlaying = true;
@@ -255,7 +263,11 @@ io.on('connection', (connection) => {
     console.log(`User ${users[connection.id].display_name} has paused playback.`);
 
     for (const socket in users) {
-      await users[socket].spotify_api.pause();
+      if (users[socket].connection.connected) {
+        await users[socket].spotify_api.pause();
+      } else {
+        delete users[socket];
+      }
     }
     io.emit('pause')
     isPlaying = false;
@@ -263,11 +275,14 @@ io.on('connection', (connection) => {
 
   connection.on('seek', async(time) => {
     console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
-    let song_id;
 
     for (const socket in users) {
-      await users[socket].spotify_api.seek(time*1000, {}, () => {
-      })
+      if (users[socket].connection.connected) {
+        await users[socket].spotify_api.seek(time * 1000, {}, () => {
+        })
+      } else {
+        delete users[socket];
+      }
     }
     song_time_ms = time;
   })
@@ -277,10 +292,14 @@ io.on('connection', (connection) => {
       console.log(`User ${users[connection.id].display_name} hit rewind.`);
 
       for (const socket in users) {
-        await users[socket].spotify_api.play({
-          "uris": [`spotify:track:${queue[--queue_pos]}`],
-          "position_ms": 0
-        })
+        if (users[socket].connection.connected) {
+          await users[socket].spotify_api.play({
+            "uris": [`spotify:track:${queue[--queue_pos]}`],
+            "position_ms": 0
+          })
+        } else {
+          delete users[socket];
+        }
       }
 
       await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
@@ -301,10 +320,14 @@ io.on('connection', (connection) => {
       console.log(`User ${users[connection.id].display_name} skipped the current song.`);
 
       for (const socket in users) {
-        await users[socket].spotify_api.play({
-          "uris": [`spotify:track:${queue[++queue_pos]}`],
-          "position_ms": 0
-        })
+        if (users[socket].connection.connected) {
+          await users[socket].spotify_api.play({
+            "uris": [`spotify:track:${queue[++queue_pos]}`],
+            "position_ms": 0
+          })
+        } else {
+          delete users[socket];
+        }
       }
 
       await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
