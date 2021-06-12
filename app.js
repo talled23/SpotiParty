@@ -188,7 +188,9 @@ io.on('connection', (connection) => {
     for (let i = 0; i < queue.length; i++) {
       connection.emit("added_queue", queue[i])
     }
-    connection.emit('queue_pos', queue_pos, queue.length)
+    if (queue.length > 0) {
+      connection.emit('queue_pos', queue_pos, queue.length)
+    }
   })
 
   connection.on('sync', async() => {
@@ -346,6 +348,31 @@ io.on('connection', (connection) => {
       song_time_ms = 0;
     }
     io.emit('queue_pos', queue_pos, queue.length)
+  })
+
+  connection.on('clear', async() => {
+    while (queue.length > 0) {
+      queue.pop();
+    }
+
+    song_time_ms = 0;
+    isPlaying = false;
+    queue_pos = 0;
+    url="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"
+
+
+    io.emit('image_url', url)
+    io.emit('pause')
+    io.emit('song_duration_ms', 100, 0)
+    io.emit('clear')
+
+    for (const socket in users) {
+      if (users[socket].connection.connected) {
+        await users[socket].spotify_api.pause();
+      } else {
+        delete users[socket];
+      }
+    }
   })
 });
 

@@ -6,7 +6,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
     <script src="https://kit.fontawesome.com/237b5ec3bb.js" crossorigin="anonymous"></script>
     <style type="text/css">
-
       li {
         width: 50%;
       }
@@ -26,9 +25,33 @@
         white-space: nowrap;
         width: 500px;
       }
+
+      .msg-window {
+        box-shadow: 0px 0px 5px 5px #0ff;
+        border-radius: 5%;
+        width: 400px;
+        height: 300px;
+        justify-content: center;
+        float: right;
+        margin-bottom: 10px;
+      }
+
+      .chat form {
+        width: 55%;
+        margin: auto;
+      }
+
+      .chat {
+        float: right;
+        justify-content: center;
+        margin-top: 100px;
+        margin-right: 100px;
+      }
+
       .plate {
+        float: left;
         background-color: #3B3C36;
-        width: 700px;
+        width: 600px;
         height: 500px;
         justify-content: center;
         display: flex;
@@ -87,7 +110,7 @@
         height: 300px;
         width: 300px;
         z-index: 5;
-        left: 41%;
+        left: 37.5%;
         top: 15%;
         position: absolute;
       }
@@ -166,6 +189,8 @@
             <button style="display:inline" class="btn btn-default" id="pause-song"><i class="fas fa-pause"></i></button>
             <button style="display:inline" class="btn btn-default" id="skip"><i class="fas fa-forward"></i></button>
             <button style="display:inline" class="btn btn-default" id="sync"><i class="fas fa-sync-alt"></i></button>
+            <button style="display:inline" class="btn btn-default" id="clear"><i class="fas fa-times"></i></button>
+
           </div>
         <input style="margin-bottom:25px; width: 50%" value=0 max=100 type="range" class="form-range" id="customRange1">
       </div>
@@ -180,16 +205,26 @@
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>
       <div class="media">
-        <div class="pull-left">
-          <div class = "plate">
-            <div class="disk">
-              <span class="dot"></span>
-              <span class="ring"></span>
-              <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
-              <img class="track-pic" id="track-pic" src="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
-              <img class="arm" src="https://cdn.discordapp.com/attachments/706271072932200488/853084738796388362/162346156972484331.png"/>
-            </div>
+        <div class = "plate">
+          <div class="disk">
+            <span class="dot"></span>
+            <span class="ring"></span>
+            <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
+            <img class="track-pic" id="track-pic" src="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
+            <img class="arm" src="https://cdn.discordapp.com/attachments/706271072932200488/853084738796388362/162346156972484331.png"/>
           </div>
+        </div>
+
+        <div class="chat">
+          <div class="msg-window">
+
+          </div>
+          <form>
+            <div>
+              <input placeholder="message">
+              <button><i class="far fa-paper-plane"></i></button>
+            </div>
+          </form>
         </div>
         <div class="media-body">
         </div>
@@ -290,22 +325,6 @@
               $('#login').show();
               $('#loggedin').hide();
           }
-
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              setCookie("spotify_access", access_token);
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
         }
       })();
     </script>
