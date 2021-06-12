@@ -188,6 +188,7 @@ io.on('connection', (connection) => {
     for (let i = 0; i < queue.length; i++) {
       connection.emit("added_queue", queue[i])
     }
+    connection.emit('queue_pos', queue_pos, queue.length)
   })
 
   connection.on('sync', async() => {
@@ -203,6 +204,7 @@ io.on('connection', (connection) => {
       connection.emit('pause')
     }
     connection.emit("song_duration_ms", duration, song_time_ms)
+    connection.emit('queue_pos', queue_pos)
   })
 
   connection.on('add_queue', async ({ isCollection, id }) => {
@@ -257,6 +259,7 @@ io.on('connection', (connection) => {
     }
     isPlaying = true;
     io.emit('resume')
+    io.emit('queue_pos', queue_pos, queue.length)
   })
 
   connection.on('pause', async () => {
@@ -310,6 +313,7 @@ io.on('connection', (connection) => {
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration, 0)
       io.emit('resume')
+      io.emit('queue_pos', queue_pos, queue.length)
       isPlaying = true;
       song_time_ms = 0;
     }
@@ -341,6 +345,7 @@ io.on('connection', (connection) => {
       isPlaying = true;
       song_time_ms = 0;
     }
+    io.emit('queue_pos', queue_pos, queue.length)
   })
 });
 

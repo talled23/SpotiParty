@@ -195,5 +195,16 @@ socket.on('resume', () => {
 })
 
 socket.on('added_queue', ( songId ) => {
-  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="300" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe></li>`
+  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe></li>`
+})
+
+socket.on('queue_pos', (index, max) => {
+  const queue = document.querySelectorAll('#queue li iframe');
+  if (index > 0) {
+    queue[index-1].style.border = 0;
+  }
+  if (index < max) {
+    queue[index+1].style.border = 0;
+  }
+  queue[index].style.border = "#0ff solid 2px";
 })
