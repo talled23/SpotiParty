@@ -1,0 +1,157 @@
+li {
+    width: 50%;
+    list-style-type: none;
+}
+
+.form-slider {
+    display: block;
+    text-align: center;
+    line-height: 150%;
+}
+
+.text-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+}
+
+.chat form {
+    width: 55%;
+    margin: auto;
+}
+
+.chat {
+    float: right;
+    justify-content: center;
+    margin-top: 100px;
+    margin-right: 100px;
+}
+
+.plate {
+    float: left;
+    background-color: #3B3C36;
+    width: 600px;
+    height: 500px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border-radius: 10%;
+}
+.disk{
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px;
+}
+.track-pic {
+    /* animation: spinning-disk 10s infinite linear; */
+    animation-iteration-count:infinite;
+    animation-timing-function:linear;
+    animation-name:spinning-disk;
+    animation-duration:5s;
+    box-shadow: 0px 0px 40px 20px #0ff;
+    width: 400px;
+    height: 400px;
+    border-radius:50%;
+    position: relative;
+    z-index: 1;
+}
+.paused {
+    animation-play-state: paused;
+}
+.border {
+    height: 125px;
+    width: 125px;
+    background-color: black;
+    border-radius: 50%;
+    z-index: 2;
+    position: absolute;
+}
+.ring {
+    height: 100px;
+    width: 100px;
+    background-color: yellow;
+    border-radius: 50%;
+    z-index: 3;
+    position: absolute;
+}
+.dot {
+    height: 15px;
+    width: 15px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 4;
+    position: absolute;
+}
+.arm {
+    height: 300px;
+    width: 300px;
+    z-index: 5;
+    left: 37.5%;
+    top: 15%;
+    position: absolute;
+}
+
+.search-results {
+    margin-bottom: 75px;
+    list-style:none;
+}
+
+.search-results a {
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.search-results:hover {
+    color:#000;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+#login, #loggedin {
+    display: none;
+}
+
+#msg-window {
+    box-shadow: 0px 0px 5px 5px #0ff;
+    border-radius: 5%;
+    width: 400px;
+    height: 300px;
+    justify-content: center;
+    float: right;
+    margin-bottom: 10px;
+}
+
+#queue {
+    list-style-type: none;
+    padding: 0;
+    overflow: hidden;
+    width: 66%;
+    margin-top: 50px;
+}
+
+ul#queue {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+ul#queue li {
+    display: inline;
+}
+
+#msg-window ul li {
+    width: 100%;
+}
+
+@keyframes spinning-disk {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}

@@ -159,9 +159,10 @@ setInterval(() => {
 
 io.on('connection', (connection) => {
   connection.on('logged_in', ({ access_token, display_name }) => {
-    console.log("=============================================")
-    console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
-    console.log("=============================================")
+    // console.log("=============================================")
+    // console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
+    // console.log("=============================================")
+    io.emit('chat', `${display_name} joined`)
 
     const spotifyApi = new SpotifyWebApi({
       clientId: client_id,
@@ -227,14 +228,17 @@ io.on('connection', (connection) => {
   connection.on('play', async ({ resume, offset }) => {
 
     if (!resume) {
+      let name;
       await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data)=> {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
+        name = data.body.name;
       });
 
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration, 0)
-      console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
+      // console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
+      io.emit('chat', `${users[connection.id].display_name} played "${name}"`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
@@ -250,7 +254,8 @@ io.on('connection', (connection) => {
       song_time_ms = 0;
 
     } else {
-      console.log(`User ${users[connection.id].display_name} has resumed playback.`);
+      // console.log(`User ${users[connection.id].display_name} has resumed playback.`);
+      io.emit('chat', `${users[connection.id].display_name} has resumed playback.`)
       for (const socket in users) {
         if (users[socket].connection.connected) {
           await users[socket].spotify_api.play();
@@ -265,7 +270,8 @@ io.on('connection', (connection) => {
   })
 
   connection.on('pause', async () => {
-    console.log(`User ${users[connection.id].display_name} has paused playback.`);
+    // console.log(`User ${users[connection.id].display_name} has paused playback.`);
+    io.emit('chat', `${users[connection.id].display_name} has paused playback.`)
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
@@ -279,7 +285,8 @@ io.on('connection', (connection) => {
   });
 
   connection.on('seek', async(time) => {
-    console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
+    // console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
+    io.emit('chat', `${users[connection.id].display_name} moved the song to time: ${time}`)
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
@@ -294,7 +301,8 @@ io.on('connection', (connection) => {
 
   connection.on('rewind', async() => {
     if (queue_pos > 0) {
-      console.log(`User ${users[connection.id].display_name} hit rewind.`);
+      // console.log(`User ${users[connection.id].display_name} hit rewind.`);
+      io.emit('chat', `${users[connection.id].display_name} hit rewind`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
@@ -323,7 +331,8 @@ io.on('connection', (connection) => {
 
   connection.on('skip', async() => {
     if (queue_pos + 1 < queue.length) {
-      console.log(`User ${users[connection.id].display_name} skipped the current song.`);
+      // console.log(`User ${users[connection.id].display_name} skipped the current song.`);
+      io.emit('chat', `${users[connection.id].display_name} skipped current`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {

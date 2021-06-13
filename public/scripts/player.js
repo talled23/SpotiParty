@@ -217,3 +217,7 @@ socket.on('clear', () => {
   document.getElementById('queue').innerHTML = "";
   document.getElementsByClassName('ring')[0].style.backgroundColor = "yellow";
 })
+
+socket.on('chat', (msg) => {
+  document.querySelector("#msg-window ul").innerHTML += `<li>${msg}</li>`
+})

@@ -4,161 +4,8 @@
     <title>SpotiParty</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
+    <link rel="stylesheet" href="styles/style.css">
     <script src="https://kit.fontawesome.com/237b5ec3bb.js" crossorigin="anonymous"></script>
-    <style type="text/css">
-      li {
-        width: 50%;
-      }
-
-      .form-slider {
-        display: block;
-        text-align: center;
-        line-height: 150%;
-      }
-
-      #login, #loggedin {
-        display: none;
-      }
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-
-      .msg-window {
-        box-shadow: 0px 0px 5px 5px #0ff;
-        border-radius: 5%;
-        width: 400px;
-        height: 300px;
-        justify-content: center;
-        float: right;
-        margin-bottom: 10px;
-      }
-
-      .chat form {
-        width: 55%;
-        margin: auto;
-      }
-
-      .chat {
-        float: right;
-        justify-content: center;
-        margin-top: 100px;
-        margin-right: 100px;
-      }
-
-      .plate {
-        float: left;
-        background-color: #3B3C36;
-        width: 600px;
-        height: 500px;
-        justify-content: center;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        border-radius: 10%;
-      }
-      .disk{
-        justify-content: center;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 20px;
-      }
-      .track-pic {
-        /* animation: spinning-disk 10s infinite linear; */
-        animation-iteration-count:infinite;
-        animation-timing-function:linear;
-        animation-name:spinning-disk;
-        animation-duration:5s;
-        box-shadow: 0px 0px 40px 20px #0ff;
-        width: 400px;
-        height: 400px;
-        border-radius:50%;
-        position: relative;
-        z-index: 1;
-      }
-      .paused {
-        animation-play-state: paused;
-      }
-      .border {
-        height: 125px;
-        width: 125px;
-        background-color: black;
-        border-radius: 50%;
-        z-index: 2;
-        position: absolute;
-      }
-      .ring {
-        height: 100px;
-        width: 100px;
-        background-color: yellow;
-        border-radius: 50%;
-        z-index: 3;
-        position: absolute;
-      }
-      .dot {
-        height: 15px;
-        width: 15px;
-        background-color: white;
-        border-radius: 50%;
-        z-index: 4;
-        position: absolute;
-      }
-      .arm {
-        height: 300px;
-        width: 300px;
-        z-index: 5;
-        left: 37.5%;
-        top: 15%;
-        position: absolute;
-      }
-
-      @keyframes spinning-disk {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(359deg);
-        }
-      }
-
-      .search-results {
-        margin-bottom: 75px;
-        list-style:none;
-      }
-
-      .search-results a {
-        text-decoration: none !important;
-        color: inherit;
-      }
-
-      .search-results:hover {
-        color:#000;
-        text-decoration:none;
-        cursor:pointer;
-      }
-
-      #queue {
-        list-style-type: none;
-        padding: 0;
-        overflow: hidden;
-        width: 66%;
-        margin-top: 50px;
-      }
-
-      ul#queue {
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
-      }
-
-      ul#queue li {
-        display: inline;
-      }
-
-    </style>
   </head>
 
   <body>
@@ -216,8 +63,8 @@
         </div>
 
         <div class="chat">
-          <div class="msg-window">
-
+          <div id="msg-window">
+            <ul></ul>
           </div>
           <form>
             <div>
