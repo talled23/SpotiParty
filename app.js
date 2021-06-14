@@ -162,7 +162,7 @@ io.on('connection', (connection) => {
     // console.log("=============================================")
     // console.log(`Socket ${connection.id} (${display_name}) has logged in with token ${access_token}`)
     // console.log("=============================================")
-    io.emit('chat', `${display_name} joined`)
+    io.emit('logs', `${display_name} joined`)
 
     const spotifyApi = new SpotifyWebApi({
       clientId: client_id,
@@ -238,7 +238,7 @@ io.on('connection', (connection) => {
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration, 0)
       // console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
-      io.emit('chat', `${users[connection.id].display_name} played "${name}"`)
+      io.emit('logs', `${users[connection.id].display_name} played "${name}"`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
@@ -255,7 +255,7 @@ io.on('connection', (connection) => {
 
     } else {
       // console.log(`User ${users[connection.id].display_name} has resumed playback.`);
-      io.emit('chat', `${users[connection.id].display_name} has resumed playback.`)
+      io.emit('logs', `${users[connection.id].display_name} has resumed playback.`)
       for (const socket in users) {
         if (users[socket].connection.connected) {
           await users[socket].spotify_api.play();
@@ -271,7 +271,7 @@ io.on('connection', (connection) => {
 
   connection.on('pause', async () => {
     // console.log(`User ${users[connection.id].display_name} has paused playback.`);
-    io.emit('chat', `${users[connection.id].display_name} has paused playback.`)
+    io.emit('logs', `${users[connection.id].display_name} has paused playback.`)
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
@@ -286,7 +286,7 @@ io.on('connection', (connection) => {
 
   connection.on('seek', async(time) => {
     // console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
-    io.emit('chat', `${users[connection.id].display_name} moved the song to time: ${time}`)
+    io.emit('logs', `${users[connection.id].display_name} moved the song to time: ${time}`)
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
@@ -302,7 +302,7 @@ io.on('connection', (connection) => {
   connection.on('rewind', async() => {
     if (queue_pos > 0) {
       // console.log(`User ${users[connection.id].display_name} hit rewind.`);
-      io.emit('chat', `${users[connection.id].display_name} hit rewind`)
+      io.emit('logs', `${users[connection.id].display_name} hit rewind`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
@@ -332,7 +332,7 @@ io.on('connection', (connection) => {
   connection.on('skip', async() => {
     if (queue_pos + 1 < queue.length) {
       // console.log(`User ${users[connection.id].display_name} skipped the current song.`);
-      io.emit('chat', `${users[connection.id].display_name} skipped current`)
+      io.emit('logs', `${users[connection.id].display_name} skipped current`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
@@ -374,6 +374,7 @@ io.on('connection', (connection) => {
     io.emit('pause')
     io.emit('song_duration_ms', 100, 0)
     io.emit('clear')
+    io.emit('logs', `${users[connection.id].display_name} cleared the queue`)
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
@@ -383,6 +384,10 @@ io.on('connection', (connection) => {
       }
     }
   })
+
+  // connection.on('chat', (msg) => {
+  //   io.emit('chat', msg, users[connection.id]);
+  // })
 });
 
 const PORT = process.env.PORT || 8888;

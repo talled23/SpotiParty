@@ -21,11 +21,16 @@ li {
     margin: auto;
 }
 
+.chat ul {
+    height: 10px;
+}
+
 .chat {
     float: right;
     justify-content: center;
     margin-top: 100px;
     margin-right: 100px;
+    height: 400px;
 }
 
 .plate {

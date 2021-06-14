@@ -164,6 +164,10 @@ document.getElementById('clear').addEventListener("click", () => {
   socket.emit('clear')
 })
 
+document.getElementById('msg-button').addEventListener('click', () => {
+  socket.emit('chat', document.getElementById('msg-button').value);
+})
+
 socket.on('image_url', (url) => {
   document.getElementById('track-pic').src = url;
   if(url !== "https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"){
@@ -218,6 +222,10 @@ socket.on('clear', () => {
   document.getElementsByClassName('ring')[0].style.backgroundColor = "yellow";
 })
 
-socket.on('chat', (msg) => {
-  document.querySelector("#msg-window ul").innerHTML += `<li>${msg}</li>`
+socket.on('logs', (msg) => {
+  document.querySelector("#msg-window ul").innerHTML += `<li><em>${msg}</em></li>`
 })
+
+// socket.on('chat', (msg, name) => {
+//   document.querySelector("#msg-window ul").innerHTML += `<li>${name}: ${msg}</li>`
+// })
