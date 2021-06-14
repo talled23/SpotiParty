@@ -12,7 +12,8 @@ li {
 }
 
 body {
-    background-color: black;
+    background: url("https://i.pinimg.com/originals/64/ed/d6/64edd6602a0772197f61915c99d20e85.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
 
 .form-slider {

@@ -22,15 +22,19 @@
         <ul id="queue"></ul>
         <div>
           <div style="margin-bottom:10px; margin-left: 5%">
-            <div>
+            <form style="margin-bottom:10px">
+              <input type="url" pattern="https://.*" id="pog"></input>
+              <button class="btn btn-outline-success my-2 my-sm-0" id="bg-button" type="submit">Background</button>
+            </form>
 
-            </div>
-
+            
             <form style="display:inline" class="form-inline my-2 my-lg-0">
               <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
 
             </form>
+
+            
 
             <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="rewind"><img src = "https://i.ibb.co/D1qNzTt/skip-back-pink.png" width = "30" height = "30"></button>
             <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="pause-song"><img src = "https://i.ibb.co/qyNxqr4/New-Project-7.png" width = "30" height = "30"></button>

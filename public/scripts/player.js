@@ -179,6 +179,12 @@ document.getElementById('search-button').addEventListener("click", (e) => {
   }
 });
 
+document.getElementById('bg-button').addEventListener("click", (e) => {
+  e.preventDefault();
+  const linky = document.getElementById("pog").value;
+  socket.emit("bg", linky);
+});
+
 document.getElementById("customRange1").addEventListener("click", () => {
   socket.emit('seek', document.getElementById("customRange1").value)
 });
@@ -224,17 +230,17 @@ socket.on('pause', () => {
   document.getElementById("track-pic").setAttribute('class', 'track-pic paused')
   document.getElementById('pause-song').innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
   isPlaying = false;
-})
+});
 
 socket.on('resume', () => {
   document.getElementById("track-pic").setAttribute('class', 'track-pic')
   document.getElementById('pause-song').innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
   isPlaying = true;
-})
+});
 
 socket.on('added_queue', ( songId ) => {
   document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe></li>`
-})
+});
 
 socket.on('queue_pos', (index, max) => {
   const queue = document.querySelectorAll('#queue li iframe');
@@ -245,15 +251,19 @@ socket.on('queue_pos', (index, max) => {
     queue[index+1].style.border = 0;
   }
   queue[index].style.border = "#0ff solid 2px";
-})
+});
 
 socket.on('clear', () => {
   document.getElementById('queue').innerHTML = "";
   document.getElementsByClassName('ring')[0].style.backgroundColor = "yellow";
-})
+});
 
 socket.on('logs', (msg) => {
   document.querySelector("#msg-window ul").innerHTML += `<li><em>${msg}</em></li>`
+});
+
+socket.on('bg', (linky) =>{
+  document.body.setAttribute("style", "background-image: url(" + linky + ")")
 })
 
 window.onload = () => {

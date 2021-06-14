@@ -296,6 +296,11 @@ io.on('connection', (connection) => {
     isPlaying = false;
   });
 
+  connection.on('bg', async(linky) =>{
+    io.emit('logs', `${users[connection.id].display_name} has changed the bg to: ${linky}`);
+    io.emit('bg', linky);
+  });
+
   connection.on('seek', async(time) => {
     // console.log(`User ${users[connection.id].display_name} moved the song to time: ${time}.`);
     io.emit('logs', `${users[connection.id].display_name} moved the song to time: ${time}`)
@@ -309,7 +314,7 @@ io.on('connection', (connection) => {
       }
     }
     song_time_ms = time;
-  })
+  });
 
   connection.on('rewind', async() => {
     if (queue_pos > 0) {
