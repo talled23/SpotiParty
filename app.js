@@ -385,9 +385,10 @@ io.on('connection', (connection) => {
     }
   })
 
-  // connection.on('chat', (msg) => {
-  //   io.emit('chat', msg, users[connection.id]);
-  // })
+  connection.on('chat', async(msg) => {
+    console.log('chatted')
+    io.emit('chat', `${users[connection.id].display_name}: ${msg}`)
+  })
 });
 
 const PORT = process.env.PORT || 8888;
