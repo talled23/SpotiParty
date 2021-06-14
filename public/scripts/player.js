@@ -228,8 +228,9 @@ window.onload = () => {
   });
 
   document.getElementById('msg-button').addEventListener("click", (e) => {
+    // alert('hello')
     e.preventDefault();
-    if (document.getElementById('msg-input').value != "") {
+    if (document.getElementById('msg-input').value !== "") {
       socket.emit('chat', document.getElementById('msg-input').value);
       document.getElementById('msg-input').value = "";
     }
