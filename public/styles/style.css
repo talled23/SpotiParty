@@ -3,6 +3,10 @@ li {
     list-style-type: none;
 }
 
+body {
+    background-color: black;
+}
+
 .form-slider {
     display: block;
     text-align: center;
