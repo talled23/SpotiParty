@@ -212,12 +212,20 @@ io.on('connection', (connection) => {
     }
   })
 
-  connection.on('add_queue', async ({ isCollection, id }) => {
-    if (isCollection) {
+  connection.on('add_queue', async ({ type, id }) => {
+    if (type==="album") {
       await users[connection.id].spotify_api.getAlbum(id).then((data) => {
         data.body.tracks.items.forEach((track) => {
           queue.push(track.id)
           io.emit('added_queue', track.id)
+        })
+      })
+    }
+    else if (type==="playlist") {
+      await users[connection.id].spotify_api.getPlaylistTracks(id).then((data) => {
+        data.body.items.forEach((track) => {
+          queue.push(track.track.id)
+          io.emit('added_queue', track.track.id)
         })
       })
     }
