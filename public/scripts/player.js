@@ -71,12 +71,15 @@ document.getElementById('search-button').addEventListener("click", (e) => {
   e.preventDefault();
 
   const albums = []
+  const playlists = []
   const ids = []
 
   const d = document.getElementById("search-results-tracks")
   const de = document.getElementById("search-results-albums")
-  d.innerHTML = "";
-  de.innerHTML = "";
+  const dee = document.getElementById("search-results-playlists")
+  d.innerHTML = ""; //tracks
+  de.innerHTML = ""; //albums
+  dee.innerHTML = ""; //playlists
 
   //differentiate between buttons
   let cur = 0
@@ -103,6 +106,68 @@ document.getElementById('search-button').addEventListener("click", (e) => {
 
           // playing the song
           socket.emit('add_queue', {isCollection: true, id: albumId})
+          setTimeout(() => {
+            if (!isPlaying) {
+              socket.emit('play', {resume: false, offset: 0})
+              pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+              isPlaying = true;
+            }
+          }, 250)
+        })
+      }
+    });
+
+    fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(document.getElementById('search-bar').value)}&type=album&market=US&limit=3`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getCookie("spotify_access")}`
+      }
+    }).then(response => response.json()).then((data) => {
+      data.albums.items.forEach((album) => {
+        albums.push(album.id)
+        de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="100%" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
+      });
+      const items = de.getElementsByTagName("li");
+      for (let i = 0; i < albums.length; i++) {
+        items[i].addEventListener("click", () => {
+          document.getElementById("search-bar").value = albums[i];
+          const pause = document.getElementById('pause-song');
+          const albumId = document.getElementById('search-bar').value;
+
+          // playing the song
+          socket.emit('add_queue', {isCollection: true, id: albumId})
+          setTimeout(() => {
+            if (!isPlaying) {
+              socket.emit('play', {resume: false, offset: 0})
+              pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+              isPlaying = true;
+            }
+          }, 250)
+        })
+      }
+    });
+
+    fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(document.getElementById('search-bar').value)}&type=playlist&market=US&limit=3`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getCookie("spotify_access")}`
+      }
+    }).then(response => response.json()).then((data) => {
+      data.playlists.items.forEach((playlist) => {
+        playlists.push(playlist.id)
+        dee.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/playlist/${playlist.id}" width="100%" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
+      });
+      const items = dee.getElementsByTagName("li");
+      for (let i = 0; i < playlists.length; i++) {
+        items[i].addEventListener("click", () => {
+          document.getElementById("search-bar").value = playlists[i];
+          const pause = document.getElementById('pause-song');
+          const playlistId = document.getElementById('search-bar').value;
+
+          // playing the song
+          socket.emit('add_queue', {isCollection: true, id: playlistId})
           setTimeout(() => {
             if (!isPlaying) {
               socket.emit('play', {resume: false, offset: 0})

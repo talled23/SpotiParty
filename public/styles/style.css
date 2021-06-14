@@ -1,3 +1,11 @@
+h1, p, li {
+    color: white;
+}
+
+button {
+    color: black;
+}
+
 li {
     width: 50%;
     list-style-type: none;
