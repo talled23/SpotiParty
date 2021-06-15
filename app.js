@@ -254,55 +254,75 @@ io.on('connection', (connection) => {
         name = data.body.name;
       });
 
+      song_time_ms = 0;
       io.emit('image_url', url);
       io.emit('song_duration_ms', duration, 0)
+      io.emit('resume')
       // console.log(`User ${users[connection.id].display_name} has played song ${queue[queue_pos]}`);
       io.emit('logs', `${users[connection.id].display_name} played "${name}"`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
-          await users[socket].spotify_api.play({
-            "uris": [`spotify:track:${queue[queue_pos]}`],
-            "position_ms": offset
-          });
+          let hasDevice = false;
+          let played = false;
+          await users[socket].spotify_api.getMyDevices().then((data) => {
+            data.body.devices.forEach((device) => {
+              if (device.is_active && !played) {
+                users[socket].spotify_api.play({
+                  "uris": [`spotify:track:${queue[queue_pos]}`],
+                  "position_ms": offset
+                });
+                hasDevice = true;
+                played = true;
+              }
+            })
+            if (!hasDevice)
+              connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
+          })
         } else {
           delete users[socket];
         }
       }
-
-      song_time_ms = 0;
-
+      isPlaying = true;
+      io.emit('resume')
+      if (queue.length > 0) {
+        io.emit('queue_pos', queue_pos, queue.length)
+      }
     } else {
       // console.log(`User ${users[connection.id].display_name} has resumed playback.`);
-      io.emit('logs', `${users[connection.id].display_name} has resumed playback.`)
-      for (const socket in users) {
-        if (users[socket].connection.connected) {
-          await users[socket].spotify_api.play();
-        } else {
-          delete users[socket];
+      if (queue.length === 0) {
+        connection.emit('error', "Please do not resume when there is nothing in queue.")
+      } else {
+        io.emit('logs', `${users[connection.id].display_name} has resumed playback.`)
+        for (const socket in users) {
+          if (users[socket].connection.connected) {
+            await users[socket].spotify_api.play();
+          } else {
+            delete users[socket];
+          }
+        }
+        isPlaying = true;
+        io.emit('resume')
+        if (queue.length > 0) {
+          io.emit('queue_pos', queue_pos, queue.length)
         }
       }
-    }
-    isPlaying = true;
-    io.emit('resume')
-    if (queue.length > 0) {
-      io.emit('queue_pos', queue_pos, queue.length)
     }
   })
 
   connection.on('pause', async () => {
     // console.log(`User ${users[connection.id].display_name} has paused playback.`);
     io.emit('logs', `${users[connection.id].display_name} has paused playback.`)
-
     for (const socket in users) {
-      if (users[socket].connection.connected) {
-        await users[socket].spotify_api.pause();
-      } else {
-        delete users[socket];
+        if (users[socket].connection.connected) {
+          await users[socket].spotify_api.pause();
+        } else {
+          delete users[socket];
+        }
       }
-    }
     io.emit('pause')
     isPlaying = false;
+
   });
 
   connection.on('bg', async(linky) =>{

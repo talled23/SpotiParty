@@ -50,10 +50,8 @@ setInterval(() => {
 document.getElementById('pause-song').addEventListener("click", () => {
   if (isPlaying) {
     socket.emit('pause')
-    isPlaying = false;
   } else {
     socket.emit('play', { resume: true, songId: null })
-    isPlaying = true;
   }
 });
 
@@ -217,28 +215,33 @@ socket.on('image_url', (url) => {
     img.crossOrigin = 'Anonymous';
     img.src = url;
   }
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('song_duration_ms', (duration, val) => {
   const slider = document.getElementById("customRange1")
   slider.max = duration/1000;
   slider.value=val
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('pause', () => {
   document.getElementById("track-pic").setAttribute('class', 'track-pic paused')
   document.getElementById('pause-song').innerHTML = '<img src = "https://i.ibb.co/ryMjBM8/play-pink.png" width = "30" height = "30">';
   isPlaying = false;
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('resume', () => {
   document.getElementById("track-pic").setAttribute('class', 'track-pic')
   document.getElementById('pause-song').innerHTML = '<img src = "https://i.ibb.co/m9KLYs7/pause.png" width = "30" height = "30">';
   isPlaying = true;
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('added_queue', ( songId ) => {
   document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" id="song${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe><i style="margin-left: 10px; margin-right: 10px;" class="fas fa-times" id="${songId}"></i></li>`
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('queue_pos', (index, max) => {
@@ -250,11 +253,13 @@ socket.on('queue_pos', (index, max) => {
     queue[index+1].style.border = 0;
   }
   queue[index].style.border = "#0ff solid 2px";
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('clear', () => {
   document.getElementById('queue').innerHTML = "";
   document.getElementsByClassName('ring')[0].style.backgroundColor = "yellow";
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('logs', (msg) => {
@@ -263,10 +268,13 @@ socket.on('logs', (msg) => {
   if(textarea.selectionStart == textarea.selectionEnd) {
     textarea.scrollTop = textarea.scrollHeight;
   }
+  document.getElementById("texty").value += `\n${msg}`;
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
 socket.on('bg', (linky) =>{
   document.body.setAttribute("style", "background-image: url(" + linky + ")")
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 })
 
 socket.on('users', (users) => {
@@ -279,10 +287,17 @@ socket.on('users', (users) => {
   } else {
     board.value += `\n${users}`;
   }
+  document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
+})
+
+socket.on('error', (msg) => {
+  document.querySelector('#user-profile h1').innerHTML = `<h1 style="color:red">${msg}</h1>`
 })
 
 window.onload = () => {
   socket.on('chat', (msg) => {
+    document.getElementById("texty").value += `\n${msg}`;
+    document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
     var textarea = document.getElementById("texty")
     textarea.value += `\n${msg}`;
     if(textarea.selectionStart == textarea.selectionEnd) {
