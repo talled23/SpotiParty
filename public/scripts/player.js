@@ -258,7 +258,11 @@ socket.on('clear', () => {
 });
 
 socket.on('logs', (msg) => {
-  document.getElementById("texty").value += `\n${msg}`;
+  var textarea = document.getElementById("texty")
+  textarea.value += `\n${msg}`;
+  if(textarea.selectionStart == textarea.selectionEnd) {
+    textarea.scrollTop = textarea.scrollHeight;
+  }
 });
 
 socket.on('bg', (linky) =>{
@@ -279,7 +283,11 @@ socket.on('users', (users) => {
 
 window.onload = () => {
   socket.on('chat', (msg) => {
-    document.getElementById("texty").value += `\n${msg}`;
+    var textarea = document.getElementById("texty")
+    textarea.value += `\n${msg}`;
+    if(textarea.selectionStart == textarea.selectionEnd) {
+      textarea.scrollTop = textarea.scrollHeight;
+    }
   });
 
   document.getElementById('msg-button').addEventListener("click", (e) => {
