@@ -272,12 +272,12 @@ socket.on('bg', (linky) =>{
 socket.on('users', (users) => {
   const board = document.getElementById('users-ul')
   if (typeof(users) === "object") {
-    board.innerHTML = "";
+    board.value = "USERS:";
     for (let i = 0; i < users.length; i++) {
-      board.innerHTML += `<li>${users[i]}</li>`;
+      board.value += `\n${users[i]}`;
     }
   } else {
-    board.innerHTML += `<li>${users}</li>`;
+    board.value += `\n${users}`;
   }
 })
 

@@ -88,15 +88,14 @@ input[type=range] {
 h1, p, li, label {
     color: white;
 }
-.container{
-    background-color: black; 
-    text-align: center;
-}
 button {
     color: black;
 }
-.top{
-    margin-bottom: 5%;
+
+textarea {
+    background-color: black;
+    color: #0ff; padding: 20px;
+    resize: none;
 }
 
 li {
@@ -107,6 +106,14 @@ li {
 body {
     background: url("https://i.pinimg.com/originals/64/ed/d6/64edd6602a0772197f61915c99d20e85.jpg") no-repeat center center fixed;
     background-size: cover;
+}
+
+.container{
+    background-color: black;
+    text-align: center;
+}
+.top{
+    margin-bottom: 5%;
 }
 
 .form-slider {
@@ -141,6 +148,7 @@ body {
 
 #users {
     text-align:center;
+    justify-content: center;
     float: right;
     box-shadow: 0 0 5px 5px #0ff;
     border-radius: 10%;
@@ -157,8 +165,11 @@ body {
     margin-bottom: 25px;
 }
 
-#users li {
-    margin-left: 10%;
+#users textarea {
+    border-radius: 10%;
+    text-align:center;
+    width: 200px;
+    height: 300px;
 }
 
 .plate {
