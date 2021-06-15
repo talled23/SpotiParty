@@ -187,7 +187,7 @@ io.on('connection', (connection) => {
 
     for (let i = 0; i < queue.length; i++) {
       connection.emit("added_queue", queue[i])
-    }
+    }``
     if (queue.length > 0) {
       connection.emit('queue_pos', queue_pos)
     }
@@ -274,6 +274,10 @@ io.on('connection', (connection) => {
                 });
                 hasDevice = true;
                 played = true;
+                users[socket].connection.emit('resume')
+                if (queue.length > 0) {
+                  users[socket].connection.emit('queue_pos', queue_pos, queue.length)
+                }
               }
             })
             if (!hasDevice)
@@ -284,10 +288,6 @@ io.on('connection', (connection) => {
         }
       }
       isPlaying = true;
-      io.emit('resume')
-      if (queue.length > 0) {
-        io.emit('queue_pos', queue_pos, queue.length)
-      }
     } else {
       // console.log(`User ${users[connection.id].display_name} has resumed playback.`);
       if (queue.length === 0) {

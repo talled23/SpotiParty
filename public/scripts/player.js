@@ -263,12 +263,11 @@ socket.on('clear', () => {
 });
 
 socket.on('logs', (msg) => {
-  var textarea = document.getElementById("texty")
+  const textarea = document.getElementById("texty")
   textarea.value += `\n${msg}`;
-  if(textarea.selectionStart == textarea.selectionEnd) {
+  if(textarea.selectionStart === textarea.selectionEnd) {
     textarea.scrollTop = textarea.scrollHeight;
   }
-  document.getElementById("texty").value += `\n${msg}`;
   document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
 });
 
@@ -296,11 +295,10 @@ socket.on('error', (msg) => {
 
 window.onload = () => {
   socket.on('chat', (msg) => {
-    document.getElementById("texty").value += `\n${msg}`;
     document.querySelector('#user-profile h1').innerHTML = '<h1>Logged in</h1>'
     var textarea = document.getElementById("texty")
     textarea.value += `\n${msg}`;
-    if(textarea.selectionStart == textarea.selectionEnd) {
+    if(textarea.selectionStart === textarea.selectionEnd) {
       textarea.scrollTop = textarea.scrollHeight;
     }
   });
