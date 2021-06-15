@@ -19,72 +19,75 @@
         </div>
         <div id="oauth">
         </div>
-        <ul id="queue"></ul>
-        <div>
-          <div style="margin-bottom:10px; margin-left: 5%">
-            <form style="margin-bottom:10px">
-              <label for="pog">Input a custom background with valid url</label></br>
-              <input type="url" pattern="https://.*" id="pog"></input>
-              <button class="btn btn-outline-success my-2 my-sm-0" id="bg-button" type="submit">Background</button>
-            </form>
-
+        <div class = "top">
+          <div class = "plate">
             
-            <form style="display:inline" class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
-
-            </form>
-
-            <div class="chat">
-              <textarea id="texty" style="background-color: black; color: #0ff; padding: 20px; resize: none;" rows="15" cols="50" readonly="readonly">
-                Welcome to the chat room!
-              </textarea>
-              <!--event.preventDefault prevents form from refreshing-->
-              <form onsubmit="event.preventDefault();">
-                <div>
-                  <input id="msg-input" placeholder="Message">
-                  <button id="msg-button"><i class="far fa-paper-plane"></i></button>
-                </div>
-              </form>
+            <div class="disk">
+              <span class="dot"></span>
+              <span class="ring"></span>
+              <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
+              <img class="track-pic" id="track-pic" src="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
+              <img class="arm" src="https://cdn.discordapp.com/attachments/706271072932200488/853084738796388362/162346156972484331.png"/>
+            </div>
+            
+            <div class="controls">
+              <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="rewind"><img src = "https://i.ibb.co/D1qNzTt/skip-back-pink.png" width = "30" height = "30"></button>
+              <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="pause-song"><img src = "https://i.ibb.co/qyNxqr4/New-Project-7.png" width = "30" height = "30"></button>
+              <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="skip"><img src = "https://i.ibb.co/Xb4pv5m/skip-forward-pink.png" width = "30" height = "30"></button>
+              <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="sync"><img src ="https://i.ibb.co/Zz3kfgW/repeat-pink.png" width = "30" height = "30"></i></button>
+              <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="clear"><i class="fas fa-times"></i></button>
+              <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="save"><i class="fas fa-save"></i></button>
+            </div>
+            
+            <div class="bar">
+              <input style="margin-bottom:25px; width: 50%; color:#0ff" value=0 max=100 type="range" class="form-range translate-middle position-relative" id="customRange1">
             </div>
 
-            
-
-            <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="rewind"><img src = "https://i.ibb.co/D1qNzTt/skip-back-pink.png" width = "30" height = "30"></button>
-            <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="pause-song"><img src = "https://i.ibb.co/qyNxqr4/New-Project-7.png" width = "30" height = "30"></button>
-            <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="skip"><img src = "https://i.ibb.co/Xb4pv5m/skip-forward-pink.png" width = "30" height = "30"></button>
-            <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="sync"><img src ="https://i.ibb.co/Zz3kfgW/repeat-pink.png" width = "30" height = "30"></i></button>
-            <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="clear"><i class="fas fa-times"></i></button>
-            <button style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline" class="btn btn-default" id="save"><i class="fas fa-save"></i></button>
-
           </div>
-        <input style="margin-bottom:25px; width: 50%" value=0 max=100 type="range" class="form-range" id="customRange1">
-      </div>
+
+          <div class="chat">
+            <textarea id="texty" style="background-color: black; color: #0ff; padding: 20px; resize: none;" rows="15" cols="50" readonly="readonly">
+              Welcome to the chat room!
+            </textarea>
+            <!--event.preventDefault prevents form from refreshing-->
+            <form onsubmit="event.preventDefault();">
+              <div>
+                <input id="msg-input" placeholder="Message">
+                <button id="msg-button"><i class="far fa-paper-plane"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <ul id="queue"></ul>
+
+        <div class="mid">
+          <form style="margin-bottom:10px">
+            <label for="pog">Input a custom background with valid url</label></br>
+            <input type="url" pattern="https://.*" id="pog"></input>
+            <button class="btn btn-outline-success my-2 my-sm-0" id="bg-button" type="submit">Background</button>
+          </form>
+          <form style="display:inline" class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
+          </form>
+        </div>
 
         <div>
           <ul style="float:left" class="search-results" id="search-results-tracks"></ul>
           <ul style="float:left; width:32%; " class="search-results" id="search-results-albums"></ul>
           <ul style="float:left; width:25%" class="search-results" id="search-results-playlists"></ul>
         </div>
+        
+        
       </div>
     </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>
       <div class="media">
-        <div class = "plate">
-          <div class="disk">
-            <span class="dot"></span>
-            <span class="ring"></span>
-            <img class="border" src="https://image.architonic.com/img_pro2-4/156/6619/matilda-black-01-b.jpg"/>
-            <img class="track-pic" id="track-pic" src="https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1" />
-            <img class="arm" src="https://cdn.discordapp.com/attachments/706271072932200488/853084738796388362/162346156972484331.png"/>
-          </div>
-        </div>
-
         
-        <div class="media-body">
-        </div>
+
       </div>
     </script>
 

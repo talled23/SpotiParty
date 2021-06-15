@@ -265,6 +265,10 @@ socket.on('clear', () => {
   document.getElementsByClassName('ring')[0].style.backgroundColor = "yellow";
 });
 
+socket.on("disconnect", () => {
+  console.log("poop");
+});
+
 socket.on('logs', (msg) => {
   document.getElementById("texty").value += `\n${msg}`;
 });
