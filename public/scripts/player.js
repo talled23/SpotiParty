@@ -284,7 +284,6 @@ socket.on('users', (users) => {
 window.onload = () => {
   socket.on('chat', (msg) => {
     document.getElementById("texty").value += `\n${msg}`;
-    document.querySelector("#msg-window ul").innerHTML += `<li>${msg}</li>`
   });
 
   document.getElementById('msg-button').addEventListener("click", (e) => {
