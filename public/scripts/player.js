@@ -48,15 +48,11 @@ setInterval(() => {
 }, 1000);
 
 document.getElementById('pause-song').addEventListener("click", () => {
-  const pause = document.getElementById('pause-song');
-
   if (isPlaying) {
     socket.emit('pause')
-    pause.innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
     isPlaying = false;
   } else {
     socket.emit('play', { resume: true, songId: null })
-    pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
     isPlaying = true;
   }
 });
@@ -109,7 +105,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
           setTimeout(() => {
             if (!isPlaying) {
               socket.emit('play', {resume: false, offset: 0})
-              pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+              pause.innerHTML = '<img src = "https://i.ibb.co/m9KLYs7/pause.png" width = "30" height = "30">';
               isPlaying = true;
             }
           }, 250)
@@ -140,7 +136,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
           setTimeout(() => {
             if (!isPlaying) {
               socket.emit('play', {resume: false, offset: 0})
-              pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+              pause.innerHTML = '<img src = "https://i.ibb.co/m9KLYs7/pause.png" width = "30" height = "30">';
               isPlaying = true;
             }
           }, 250)
@@ -170,7 +166,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
           if (!isPlaying) {
             socket.emit('play', {resume: false, offset: 0})
 
-            pause.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+            pause.innerHTML = '<img src = "https://i.ibb.co/m9KLYs7/pause.png" width = "30" height = "30">';
             isPlaying = true;
           }
         });
@@ -231,13 +227,13 @@ socket.on('song_duration_ms', (duration, val) => {
 
 socket.on('pause', () => {
   document.getElementById("track-pic").setAttribute('class', 'track-pic paused')
-  document.getElementById('pause-song').innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
+  document.getElementById('pause-song').innerHTML = '<img src = "https://i.ibb.co/ryMjBM8/play-pink.png" width = "30" height = "30">';
   isPlaying = false;
 });
 
 socket.on('resume', () => {
   document.getElementById("track-pic").setAttribute('class', 'track-pic')
-  document.getElementById('pause-song').innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i>';
+  document.getElementById('pause-song').innerHTML = '<img src = "https://i.ibb.co/m9KLYs7/pause.png" width = "30" height = "30">';
   isPlaying = true;
 });
 
