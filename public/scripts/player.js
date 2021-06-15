@@ -214,9 +214,8 @@ socket.on('image_url', (url) => {
     const img = new Image();
 
     img.addEventListener('load', function()  {
-      var rgb = getAverageColor(img);
-      var rgbStr = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
-      document.getElementsByTagName("SPAN")[1].style.backgroundColor = rgbStr;
+      let rgb = getAverageColor(img);
+      document.getElementsByTagName("SPAN")[1].style.backgroundColor = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
     });
 
     img.crossOrigin = 'Anonymous';
@@ -272,6 +271,7 @@ socket.on('bg', (linky) =>{
 
 socket.on('users', (users) => {
   const board = document.getElementById('users-ul')
+  board.innerHTML = "";
   if (typeof(users) === "object") {
     for (let i = 0; i < users.length; i++) {
       board.innerHTML += `<li>${users[i]}</li>`;

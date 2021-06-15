@@ -440,7 +440,7 @@ io.on('connection', (connection) => {
     try {
       if (users[connection.id].display_name) {
         io.emit('logs', `user ${users[connection.id].display_name} disconnected`)
-        delete users[connection]
+        delete users[connection.id]
         let people = [];
         for (const socket in users) {
           people.push(users[socket].display_name)
@@ -449,7 +449,7 @@ io.on('connection', (connection) => {
       }
     } catch (e) {
       io.emit('logs', `user disconnected`)
-      delete users[connection]
+      delete users[connection.id]
     }
   })
 });
