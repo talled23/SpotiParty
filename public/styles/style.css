@@ -113,6 +113,7 @@ body {
     display: block;
     text-align: center;
     line-height: 150%;
+
 }
 
 .text-overflow {
@@ -132,19 +133,43 @@ body {
 }
 
 .chat {
+    margin-top: 100px;
     float: right;
     justify-content: center;
     height: 400px;
+}
+
+#users {
+    text-align:center;
+    float: right;
+    box-shadow: 0 0 5px 5px #0ff;
+    border-radius: 10%;
+    width: 200px;
+    height: 300px;
+    margin-right: 10%;
+    margin-bottom: 50px;
+}
+
+#users h3 {
+    margin-left: 25%;
+    color: #0ff;
+    width:100px;
+    margin-bottom: 25px;
+}
+
+#users li {
+    margin-left: 10%;
 }
 
 .plate {
     float: left;
     background-color: #3B3C36;
     width: 700px;
-    height: 600px;
+    height: 625px;
     border-radius: 10%;
     padding-top: 5%;
-    box-shadow: 0px 0px 5px 5px #0ff;
+    box-shadow: 0 0 5px 5px #0ff;
+    margin-bottom: 50px;
 }
 .controls {
     text-align: center;
@@ -206,8 +231,8 @@ body {
     height: 300px;
     width: 300px;
     z-index: 5;
-    left: 37.5%;
-    top: 15%;
+    left: 40%;
+    top: 20%;
     position: absolute;
 }
 

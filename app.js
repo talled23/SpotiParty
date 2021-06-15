@@ -187,11 +187,23 @@ io.on('connection', (connection) => {
     connection.emit("song_duration_ms", duration, song_time_ms)
 
     for (let i = 0; i < queue.length; i++) {
-      connection.emit("added_queue", queue[i], i)
+      connection.emit("added_queue", queue[i])
     }
     if (queue.length > 0) {
-      connection.emit('queue_pos', queue_pos, queue.length)
+      connection.emit('queue_pos', queue_pos)
     }
+
+    let people = []
+
+    for (const socket in users) {
+      if (users[socket].connection.connected && users[socket].display_name !== users[connection.id].display_name) {
+        people.push(users[socket].display_name)
+      } else {
+        delete users[socket];
+      }
+    }
+    connection.emit('users', people);
+    io.emit('users', display_name)
   })
 
   connection.on('sync', async() => {
@@ -432,6 +444,11 @@ io.on('connection', (connection) => {
       if (users[connection.id].display_name) {
         io.emit('logs', `user ${users[connection.id].display_name} disconnected`)
         delete users[connection]
+        let people = [];
+        for (const socket in users) {
+          people.push(users[socket].display_name)
+        }
+        io.emit('users', people)
       }
     } catch (e) {
       io.emit('logs', `user disconnected`)

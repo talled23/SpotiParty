@@ -262,16 +262,23 @@ socket.on('clear', () => {
   document.getElementsByClassName('ring')[0].style.backgroundColor = "yellow";
 });
 
-socket.on("disconnect", () => {
-  console.log("poop");
-});
-
 socket.on('logs', (msg) => {
   document.getElementById("texty").value += `\n${msg}`;
 });
 
 socket.on('bg', (linky) =>{
   document.body.setAttribute("style", "background-image: url(" + linky + ")")
+})
+
+socket.on('users', (users) => {
+  const board = document.getElementById('users-ul')
+  if (typeof(users) === "object") {
+    for (let i = 0; i < users.length; i++) {
+      board.innerHTML += `<li>${users[i]}</li>`;
+    }
+  } else {
+    board.innerHTML += `<li>${users}</li>`;
+  }
 })
 
 window.onload = () => {
