@@ -1,4 +1,4 @@
-h1, p, li {
+h1, p, li, label {
     color: white;
 }
 
@@ -133,7 +133,7 @@ body {
     display: none;
 }
 
-#msg-window {
+#texty {
     box-shadow: 0px 0px 5px 5px #0ff;
     border-radius: 5%;
     width: 400px;

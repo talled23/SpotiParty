@@ -259,7 +259,7 @@ socket.on('clear', () => {
 });
 
 socket.on('logs', (msg) => {
-  document.querySelector("#msg-window ul").innerHTML += `<li><em>${msg}</em></li>`
+  document.getElementById("texty").value += `\n${msg}`;
 });
 
 socket.on('bg', (linky) =>{
@@ -268,6 +268,7 @@ socket.on('bg', (linky) =>{
 
 window.onload = () => {
   socket.on('chat', (msg) => {
+    document.getElementById("texty").value += `\n${msg}`;
     document.querySelector("#msg-window ul").innerHTML += `<li>${msg}</li>`
   });
 
