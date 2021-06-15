@@ -197,8 +197,6 @@ io.on('connection', (connection) => {
     for (const socket in users) {
       if (users[socket].connection.connected && users[socket].display_name !== users[connection.id].display_name) {
         people.push(users[socket].display_name)
-      } else {
-        delete users[socket];
       }
     }
     connection.emit('users', people);
