@@ -185,7 +185,20 @@
                     display_name: response.display_name,
                   }
                   socket.emit('logged_in', socket_payload);
-                }
+                },
+                statusCode: {
+                  401: function() {
+                    $.ajax({
+                      url: '/refresh_token',
+                      data: {
+                        'refresh_token': refresh_token
+                      }
+                    }).done(function(data) {
+                      access_token = data.access_token;
+                      window.location.reload();
+                    });
+                  }
+                },
             });
           } else {
               // render initial screen
