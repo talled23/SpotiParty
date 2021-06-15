@@ -42,7 +42,7 @@ body {
     float: right;
     justify-content: center;
     margin-top: 100px;
-    margin-right: 100px;
+    /*margin-right: 100px;*/
     height: 400px;
 }
 
@@ -147,7 +147,6 @@ body {
     list-style-type: none;
     padding: 0;
     overflow: hidden;
-    width: 66%;
     margin-top: 50px;
 }
 
