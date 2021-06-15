@@ -204,6 +204,10 @@ document.getElementById('clear').addEventListener("click", () => {
   socket.emit('clear')
 })
 
+document.getElementById('save').addEventListener('click', () => {
+  socket.emit('save')
+})
+
 socket.on('image_url', (url) => {
   document.getElementById('track-pic').src = url;
   if(url !== "https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl.png?fit=350%2C350&ssl=1"){
@@ -239,7 +243,10 @@ socket.on('resume', () => {
 });
 
 socket.on('added_queue', ( songId ) => {
-  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe></li>`
+  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" id="song${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe><i style="margin-left: 10px;" class="fas fa-times" id="${songId}"></i></li>`
+  document.getElementById(songId).addEventListener('click', () => {
+    console.log("hello world");
+  })
 });
 
 socket.on('queue_pos', (index, max) => {

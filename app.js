@@ -51,7 +51,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  const scope = "user-read-private user-read-email user-read-playback-state user-modify-playback-state";
+  const scope = "user-read-private user-read-email user-read-playback-state user-modify-playback-state playlist-modify-public playlist-modify-private";
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -409,6 +409,22 @@ io.on('connection', (connection) => {
   connection.on('chat', async(msg) => {
     console.log('chatted')
     io.emit('chat', `${users[connection.id].display_name}: ${msg}`)
+  })
+
+  connection.on('save', async() => {
+    let PLID;
+    await users[connection.id].spotify_api.createPlaylist('Spotiparty', {
+      'description': 'spotiparty.club',
+      'public': true
+    }).then((data) => {
+      PLID = data.body.id;
+    })
+
+    let new_queue = []
+    for (let i = 0; i < queue.length; i++) {
+      new_queue[i] = `spotify:track:${queue[i]}`
+    }
+    await users[connection.id].spotify_api.addTracksToPlaylist(PLID, new_queue)
   })
 });
 
