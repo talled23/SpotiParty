@@ -187,7 +187,7 @@ io.on('connection', (connection) => {
     connection.emit("song_duration_ms", duration, song_time_ms)
 
     for (let i = 0; i < queue.length; i++) {
-      connection.emit("added_queue", queue[i])
+      connection.emit("added_queue", queue[i], i)
     }
     if (queue.length > 0) {
       connection.emit('queue_pos', queue_pos, queue.length)
@@ -217,7 +217,7 @@ io.on('connection', (connection) => {
       await users[connection.id].spotify_api.getAlbum(id).then((data) => {
         data.body.tracks.items.forEach((track) => {
           queue.push(track.id)
-          io.emit('added_queue', track.id)
+          io.emit('added_queue', track.id, queue.length-1)
         })
       })
     }
@@ -225,13 +225,13 @@ io.on('connection', (connection) => {
       await users[connection.id].spotify_api.getPlaylistTracks(id).then((data) => {
         data.body.items.forEach((track) => {
           queue.push(track.track.id)
-          io.emit('added_queue', track.track.id)
+          io.emit('added_queue', track.track.id, queue.length-1)
         })
       })
     }
     else {
       queue.push(id);
-      io.emit('added_queue', id)
+      io.emit('added_queue', id, queue.length-1)
     }
   })
 
@@ -426,7 +426,13 @@ io.on('connection', (connection) => {
     }
     await users[connection.id].spotify_api.addTracksToPlaylist(PLID, new_queue)
   })
+
+  connection.on('disconnect', () => {
+    io.emit('logs',`user ${users[connection.id].display_name} disconnected`)
+    delete users[connection]
+  })
 });
+
 
 const PORT = process.env.PORT || 8888;
 
