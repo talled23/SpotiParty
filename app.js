@@ -428,8 +428,15 @@ io.on('connection', (connection) => {
   })
 
   connection.on('disconnect', () => {
-    io.emit('logs',`user ${users[connection.id].display_name} disconnected`)
-    delete users[connection]
+    try {
+      if (users[connection.id].display_name) {
+        io.emit('logs', `user ${users[connection.id].display_name} disconnected`)
+        delete users[connection]
+      }
+    } catch (e) {
+      io.emit('logs', `user disconnected`)
+      delete users[connection]
+    }
   })
 });
 

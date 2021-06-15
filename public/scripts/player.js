@@ -242,14 +242,8 @@ socket.on('resume', () => {
   isPlaying = true;
 });
 
-socket.on('added_queue', ( songId, index ) => {
-  console.log(index)
-  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" id="song${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe>
-            <i style="margin-left: 10px; margin-right: 10px;" class="fas fa-times" id="${songId}"></i></li>`
-  let del = document.querySelectorAll('#queue li i')[index]
-  del.addEventListener("click", () => {
-    console.log("hello");
-  })
+socket.on('added_queue', ( songId ) => {
+  document.getElementById('queue').innerHTML += `<li><iframe src="https://open.spotify.com/embed/track/${songId}" id="song${songId}" width="250" height="80" style="border:0;" allowTransparency="false" allow="encrypted-media"></iframe><i style="margin-left: 10px; margin-right: 10px;" class="fas fa-times" id="${songId}"></i></li>`
 });
 
 socket.on('queue_pos', (index, max) => {
