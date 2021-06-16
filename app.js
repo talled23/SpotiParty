@@ -149,6 +149,7 @@ let url = "https://i0.wp.com/www.furnacemfg.com/wp-content/uploads/2015/02/vinyl
 const users = {};
 const queue = []; // queue of songIds
 let queue_pos = 0; // position in queue
+let bg = "https://wallpapercave.com/wp/wp2336997.jpg"
 
 setInterval(() => {
   if (isPlaying) {
@@ -201,6 +202,7 @@ io.on('connection', (connection) => {
     }
     connection.emit('users', people);
     io.emit('users', display_name)
+    connection.emit('bg', bg)
   })
 
   connection.on('sync', async() => {
@@ -360,9 +362,10 @@ io.on('connection', (connection) => {
     isPlaying = false;
   });
 
-  connection.on('bg', async(linky) =>{
-    io.emit('logs', `${users[connection.id].display_name} has changed the bg to: ${linky}`);
-    io.emit('bg', linky);
+  connection.on('bg', (link) => {
+    bg = link
+    io.emit('logs', `${users[connection.id].display_name} has changed the bg to: ${link}`);
+    io.emit('bg', link);
   });
 
   connection.on('seek', async(time) => {
