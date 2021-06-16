@@ -397,6 +397,11 @@ io.on('connection', (connection) => {
       // console.log(`User ${users[connection.id].display_name} hit rewind.`);
       io.emit('logs', `${users[connection.id].display_name} hit rewind`)
 
+      users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
+        url = data.body.album.images[0].url
+        duration = data.body.duration_ms;
+      });
+
       for (const socket in users) {
         if (users[socket].connection.connected) {
           let hasDevice = false;
@@ -425,11 +430,6 @@ io.on('connection', (connection) => {
           delete users[socket];
         }
       }
-
-      users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
-        url = data.body.album.images[0].url
-        duration = data.body.duration_ms;
-      });
 
       isPlaying = true;
       song_time_ms = 0;
@@ -442,6 +442,11 @@ io.on('connection', (connection) => {
       // console.log(`User ${users[connection.id].display_name} skipped the current song.`);
       io.emit('logs', `${users[connection.id].display_name} skipped current`)
 
+      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
+        url = data.body.album.images[0].url
+        duration = data.body.duration_ms;
+      });
+
       for (const socket in users) {
         if (users[socket].connection.connected) {
           let hasDevice = false;
@@ -470,11 +475,6 @@ io.on('connection', (connection) => {
           delete users[socket];
         }
       }
-
-      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
-        url = data.body.album.images[0].url
-        duration = data.body.duration_ms;
-      });
 
       isPlaying = true;
       song_time_ms = 0;
