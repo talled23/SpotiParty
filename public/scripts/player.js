@@ -293,7 +293,7 @@ socket.on('users', (users) => {
 })
 
 socket.on('error', (msg) => {
-  document.querySelector('#user-profile h1').innerHTML = `<h1 style="color:red">${msg}</h1>`
+  document.querySelector('#user-profile h1').innerHTML = `<h1 style="color:red; background-color: #14121b; margin-bottom: 30px; padding: 10px; box-shadow: 0px 0px 5px 5px #0ff;">${msg}</h1>`
 })
 
 window.onload = () => {
