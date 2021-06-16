@@ -187,7 +187,7 @@ io.on('connection', (connection) => {
 
     for (let i = 0; i < queue.length; i++) {
       connection.emit("added_queue", queue[i])
-    }``
+    }
     if (queue.length > 0) {
       connection.emit('queue_pos', queue_pos)
     }
@@ -204,21 +204,32 @@ io.on('connection', (connection) => {
   })
 
   connection.on('sync', async() => {
-    await users[connection.id].spotify_api.play({
-      "uris": [`spotify:track:${queue[queue_pos]}`],
-      "position_ms": song_time_ms*1000
-    });
-    if (isPlaying) {
-      connection.emit('resume')
-    }
-    else {
-      await users[connection.id].spotify_api.pause();
-      connection.emit('pause')
-    }
-    connection.emit("song_duration_ms", duration, song_time_ms)
-    if (queue.length > 0) {
-      connection.emit('queue_pos', queue_pos)
-    }
+    let hasDevice = false;
+    let played = false;
+    await users[connection.id].spotify_api.getMyDevices().then((data) => {
+      data.body.devices.forEach((device) => {
+        if (device.is_active && !played) {
+          users[connection.id].spotify_api.play({
+            "uris": [`spotify:track:${queue[queue_pos]}`],
+            "position_ms": song_time_ms * 1000
+          });
+          if (isPlaying) {
+            connection.emit('resume')
+          } else {
+            users[connection.id].spotify_api.pause();
+            connection.emit('pause')
+          }
+          connection.emit("song_duration_ms", duration, song_time_ms)
+          if (queue.length > 0) {
+            connection.emit('queue_pos', queue_pos)
+          }
+          hasDevice = true;
+          played = true;
+        }
+      })
+    })
+    if (!hasDevice)
+      connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
   })
 
   connection.on('add_queue', async ({ type, id }) => {
@@ -281,7 +292,7 @@ io.on('connection', (connection) => {
               }
             })
             if (!hasDevice)
-              connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
+              users[socket].connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
           })
         } else {
           delete users[socket];
@@ -296,17 +307,29 @@ io.on('connection', (connection) => {
         io.emit('logs', `${users[connection.id].display_name} has resumed playback.`)
         for (const socket in users) {
           if (users[socket].connection.connected) {
-            await users[socket].spotify_api.play();
+            let hasDevice = false;
+            let played = false;
+            await users[socket].spotify_api.getMyDevices().then((data) => {
+              data.body.devices.forEach((device) => {
+                if (device.is_active && !played) {
+                  users[socket].spotify_api.play();
+                  hasDevice = true;
+                  played = true;
+                  users[socket].connection.emit('resume')
+                  if (queue.length > 0) {
+                    users[socket].connection.emit('queue_pos', queue_pos, queue.length)
+                  }
+                }
+              })
+              if (!hasDevice)
+                users[socket].connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
+            })
           } else {
             delete users[socket];
           }
         }
-        isPlaying = true;
-        io.emit('resume')
-        if (queue.length > 0) {
-          io.emit('queue_pos', queue_pos, queue.length)
-        }
       }
+      isPlaying = true;
     }
   })
 
@@ -315,14 +338,26 @@ io.on('connection', (connection) => {
     io.emit('logs', `${users[connection.id].display_name} has paused playback.`)
     for (const socket in users) {
         if (users[socket].connection.connected) {
-          await users[socket].spotify_api.pause();
+          let hasDevice = false;
+          let paused = false;
+          await users[socket].spotify_api.getMyDevices().then((data) => {
+            data.body.devices.forEach((device) => {
+              if (device.is_active && !paused) {
+                users[socket].spotify_api.pause();
+                hasDevice = true;
+                paused = true;
+                users[socket].connection.emit('pause')
+              }
+            })
+            if (!hasDevice)
+              users[socket].connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
+          })
         } else {
           delete users[socket];
         }
       }
-    io.emit('pause')
-    isPlaying = false;
 
+    isPlaying = false;
   });
 
   connection.on('bg', async(linky) =>{
@@ -336,7 +371,18 @@ io.on('connection', (connection) => {
 
     for (const socket in users) {
       if (users[socket].connection.connected) {
-        await users[socket].spotify_api.seek(time * 1000, {}, () => {
+        let hasDevice = false;
+        let played = false;
+        await users[socket].spotify_api.getMyDevices().then((data) => {
+          data.body.devices.forEach((device) => {
+            if (device.is_active && !played) {
+              users[socket].spotify_api.seek(time * 1000, {}, () => {})
+              played = true;
+              hasDevice = true;
+            }
+          })
+          if (!hasDevice)
+            users[socket].connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
         })
       } else {
         delete users[socket];
@@ -347,31 +393,44 @@ io.on('connection', (connection) => {
 
   connection.on('rewind', async() => {
     if (queue_pos > 0) {
+      queue_pos--;
       // console.log(`User ${users[connection.id].display_name} hit rewind.`);
       io.emit('logs', `${users[connection.id].display_name} hit rewind`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
-          await users[socket].spotify_api.play({
-            "uris": [`spotify:track:${queue[--queue_pos]}`],
-            "position_ms": 0
+          let hasDevice = false;
+          let played = false;
+          await users[socket].spotify_api.getMyDevices().then((data) => {
+            data.body.devices.forEach((device) => {
+              if (device.is_active && !played) {
+                users[socket].spotify_api.play({
+                  "uris": [`spotify:track:${queue[queue_pos]}`],
+                  "position_ms": 0
+                })
+                hasDevice = true;
+                played = true;
+                users[socket].connection.emit('resume')
+                users[socket].connection.emit('image_url', url);
+                users[socket].connection.emit('song_duration_ms', duration, 0)
+                if (queue.length > 0) {
+                  users[socket].connection.emit('queue_pos', queue_pos, queue.length)
+                }
+              }
+            })
+            if (!hasDevice)
+              users[socket].connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
           })
         } else {
           delete users[socket];
         }
       }
 
-      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
+      users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
       });
 
-      io.emit('image_url', url);
-      io.emit('song_duration_ms', duration, 0)
-      io.emit('resume')
-      if (queue.length > 0) {
-        io.emit('queue_pos', queue_pos, queue.length)
-      }
       isPlaying = true;
       song_time_ms = 0;
     }
@@ -379,14 +438,33 @@ io.on('connection', (connection) => {
 
   connection.on('skip', async() => {
     if (queue_pos + 1 < queue.length) {
+      queue_pos++;
       // console.log(`User ${users[connection.id].display_name} skipped the current song.`);
       io.emit('logs', `${users[connection.id].display_name} skipped current`)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
-          await users[socket].spotify_api.play({
-            "uris": [`spotify:track:${queue[++queue_pos]}`],
-            "position_ms": 0
+          let hasDevice = false;
+          let played = false;
+          await users[socket].spotify_api.getMyDevices().then((data) => {
+            data.body.devices.forEach((device) => {
+              if (device.is_active && !played) {
+                users[socket].spotify_api.play({
+                  "uris": [`spotify:track:${queue[queue_pos]}`],
+                  "position_ms": 0
+                })
+                hasDevice = true;
+                played = true;
+                if (queue.length > 0) {
+                  users[socket].connection.emit('queue_pos', queue_pos, queue.length)
+                }
+                users[socket].connection.emit('image_url', url);
+                users[socket].connection.emit('song_duration_ms', duration, 0)
+                users[socket].connection.emit('resume')
+              }
+            })
+            if (!hasDevice)
+              users[socket].connection.emit('error', 'NO CLIENT DETECTED, please play a song on your client and sync with the server')
           })
         } else {
           delete users[socket];
@@ -398,14 +476,8 @@ io.on('connection', (connection) => {
         duration = data.body.duration_ms;
       });
 
-      io.emit('image_url', url);
-      io.emit('song_duration_ms', duration, 0)
-      io.emit('resume')
       isPlaying = true;
       song_time_ms = 0;
-    }
-    if (queue.length > 0) {
-      io.emit('queue_pos', queue_pos, queue.length)
     }
   })
 
