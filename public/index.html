@@ -53,13 +53,13 @@
             <form onsubmit="event.preventDefault();">
               <div>
                 <input id="msg-input" placeholder="Message" height="30" style="line-height: 30px;">
-                <button id="msg-button"><img src="https://i.ibb.co/SchwDYr/arrow-pink.png" width = "30" height = "30"></button>
+                <button id="msg-button" style="background-color: black; box-shadow: 0px 0px 1px 1px #0ff; display:inline"><img src="https://i.ibb.co/SchwDYr/arrow-pink.png" width = "30" height = "30"></button>
               </div>
             </form>
           </div>
 
           <div id="users">
-            <textarea id="users-ul" style="background-color: black; color: #0ff; resize: none;" rows="15" cols="20" readonly="readonly">
+            <textarea id="users-ul" style="background-color: #14121b; color: #0ff; resize: none;" rows="15" cols="20" readonly="readonly">
               USERS:
             </textarea>
           </div>
@@ -72,11 +72,11 @@
             <input class="form-control mr-sm-2" id="search-bar" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
           </form>
-          <form style="margin-bottom:10px">
-            <label for="pog">Input a custom background with valid url</label>
-            <br>
-            <input type="url" pattern="https://.*" id="pog">
+          <form style="margin-top:10px;">
+            
+            <input type="url" placeholder="https://.*" id="pog">
             <button class="btn btn-outline-success my-2 my-sm-0" id="bg-button" type="submit">Background</button>
+            
           </form>
         </div>
 

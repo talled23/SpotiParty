@@ -89,11 +89,11 @@ h1, p, li, label {
     color: white;
 }
 button {
-    color: black;
+    color: #14121b;
 }
 
 textarea {
-    background-color: black;
+    background-color: #14121b;
     color: #0ff; padding: 20px;
     resize: none;
 }
@@ -104,12 +104,11 @@ li {
 }
 
 body {
-    background: url("https://i.pinimg.com/originals/64/ed/d6/64edd6602a0772197f61915c99d20e85.jpg") no-repeat center center fixed;
+    background: url("https://wallpapercave.com/wp/wp2336997.jpg") no-repeat center center fixed;
     background-size: cover;
 }
 
 .container{
-    background-color: black;
     text-align: center;
 }
 .top{
@@ -174,7 +173,7 @@ body {
 
 .plate {
     float: left;
-    background-color: #3B3C36;
+    background-color: #14121b;
     width: 700px;
     height: 625px;
     border-radius: 10%;
@@ -217,7 +216,7 @@ body {
 .border {
     height: 125px;
     width: 125px;
-    background-color: black;
+    background-color: #14121b;
     border-radius: 50%;
     z-index: 2;
     position: absolute;
@@ -299,6 +298,38 @@ ul#queue li {
     width: 100%;
 }
 
+#search-bar{
+    background-color: #000;
+    color:#0ff;
+}
+#search-bar::-webkit-input-placeholder{
+    color:rgb(195, 255, 255);
+}
+#search-button{
+    background-color: #0ff;
+    color: #14121b;
+}
+#pog {
+    background-color: #000;
+    color: #ffccde;
+}
+#pog::-webkit-input-placeholder{
+    color: #ffebf2;
+    font-weight: 100;
+}
+#bg-button {
+    background-color: #ffccde;
+    color: #000;
+}
+
+#msg-input {
+    background-color: #000;
+    color: #ffccde;
+}
+#msg-input::-webkit-input-placeholder{
+    color: #ffebf2;
+    font-weight: 100;
+}
 @keyframes spinning-disk {
     from {
         transform: rotate(0deg);
