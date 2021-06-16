@@ -397,10 +397,13 @@ io.on('connection', (connection) => {
       // console.log(`User ${users[connection.id].display_name} hit rewind.`);
       io.emit('logs', `${users[connection.id].display_name} hit rewind`)
 
-      users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
+      await users[connection.id].spotify_api.getTrack(queue[queue_pos]).then((data) => {
         url = data.body.album.images[0].url
         duration = data.body.duration_ms;
       });
+
+      io.emit('image_url', url)
+      io.emit('song_duration_ms', duration, 0)
 
       for (const socket in users) {
         if (users[socket].connection.connected) {
@@ -416,8 +419,6 @@ io.on('connection', (connection) => {
                 hasDevice = true;
                 played = true;
                 users[socket].connection.emit('resume')
-                users[socket].connection.emit('image_url', url);
-                users[socket].connection.emit('song_duration_ms', duration, 0)
                 if (queue.length > 0) {
                   users[socket].connection.emit('queue_pos', queue_pos, queue.length)
                 }
@@ -447,6 +448,9 @@ io.on('connection', (connection) => {
         duration = data.body.duration_ms;
       });
 
+      io.emit('image_url', url);
+      io.emit('song_duration_ms', duration, 0)
+
       for (const socket in users) {
         if (users[socket].connection.connected) {
           let hasDevice = false;
@@ -463,8 +467,6 @@ io.on('connection', (connection) => {
                 if (queue.length > 0) {
                   users[socket].connection.emit('queue_pos', queue_pos, queue.length)
                 }
-                users[socket].connection.emit('image_url', url);
-                users[socket].connection.emit('song_duration_ms', duration, 0)
                 users[socket].connection.emit('resume')
               }
             })
