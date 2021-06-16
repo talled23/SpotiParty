@@ -175,7 +175,10 @@ document.getElementById('search-button').addEventListener("click", (e) => {
 
 document.getElementById('bg-button').addEventListener("click", (e) => {
   e.preventDefault();
-  const linky = document.getElementById("pog").value;
+  var linky = document.getElementById("pog").value;
+  if (linky == ""){
+    linky = "https://wallpapercave.com/wp/wp2336997.jpg"
+  }
   socket.emit("bg", linky);
 });
 
