@@ -306,8 +306,7 @@ ul#queue li {
     color:rgb(195, 255, 255);
 }
 #search-button{
-    background-color: #0ff;
-    color: #14121b;
+    background-color: #000;
 }
 #pog {
     background-color: #000;
@@ -318,8 +317,7 @@ ul#queue li {
     font-weight: 100;
 }
 #bg-button {
-    background-color: #ffccde;
-    color: #000;
+    background-color: #000;
 }
 
 #msg-input {

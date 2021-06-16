@@ -89,7 +89,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
     }).then(response => response.json()).then((data) => {
       data.albums.items.forEach((album) => {
         albums.push(album.id)
-        de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="275" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
+        de.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/album/${album.id}" width="275" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button style="background-color:black; margin-bottom:20px" id="button${cur}"><img src="https://i.ibb.co/L8zNQK1/queue-pink.png" style="background-color:black" width = "30" height = "30"></button></a></li>`
       });
       const items = de.getElementsByTagName("li");
       for (let i = 0; i < albums.length; i++) {
@@ -120,7 +120,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
     }).then(response => response.json()).then((data) => {
       data.playlists.items.forEach((playlist) => {
         playlists.push(playlist.id)
-        dee.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/playlist/${playlist.id}" width="275" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button id="button${cur}">play</button></a></li>`
+        dee.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/playlist/${playlist.id}" width="275" height="170" style="border:0;" allowtransparency="true" allow="encrypted-media"></iframe><button style="background-color:black; margin-bottom:20px" id="button${cur}"><img src="https://i.ibb.co/L8zNQK1/queue-pink.png" style="background-color:black" width = "30" height = "30"></button></a></li>`
       });
       const items = dee.getElementsByTagName("li");
       for (let i = 0; i < playlists.length; i++) {
@@ -151,7 +151,7 @@ document.getElementById('search-button').addEventListener("click", (e) => {
     }).then(response => response.json()).then((data) => {
       data.tracks.items.forEach((track) => {
         ids.push(track.id)
-        d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="275" height="80" style="border:0;" allowtransparency="false" allow="encrypted-media"></iframe><button>play</button></a></li>`
+        d.innerHTML += `<li><a><iframe src="https://open.spotify.com/embed/track/${track.id}" width="275" height="80" style="border:0;" allowtransparency="false" allow="encrypted-media"></iframe><button style="background-color:black; margin-bottom:20px"><img src="https://i.ibb.co/L8zNQK1/queue-pink.png" style="background-color:black" width = "30" height = "30"></button></a></li>`
       });
       const items = d.getElementsByTagName("li");
       for (let i = 0; i < ids.length; i++) {
